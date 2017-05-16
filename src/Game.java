@@ -9,6 +9,8 @@ public class Game {
     public static final String GAME_TITLE = "Pace Invaders";
     public static final int SCREEN_WIDTH = 800;
     public static final int SCREEN_HEIGHT = 600;
+    public static final int FPS = 60;
+    public static final Color BACKGROUND_COLOR = Color.BLACK;
 
     // HANDLERS
     private GraphicsHandler graphics;
@@ -56,9 +58,8 @@ public class Game {
         controllerManager.addController("GAME", new GameController(this));
         controllerManager.addController("MENU", new MenuController(this));
 
+        // Set Active Controller
         controllerManager.setActiveController("GAME");
-
-        // Run game
         this.run();
     }
 
@@ -67,10 +68,13 @@ public class Game {
      */
     private void run() {
         while(true) {
-            double startTime = System.nanoTime();
-            this.update(1.0);
+            this.startTimer();
+
+            this.tick();
+            this.update(this.getDelta());
             this.render();
-            try { Thread.sleep(100); } catch (Exception e) {}
+
+            try { Thread.sleep(this.getSleepTime()); } catch (Exception e) {}
         }
     }
 
@@ -86,15 +90,34 @@ public class Game {
     /**
      * Update method (game logics)
      */
-    public void update(double delta) {
-        this.tick();
-        controllerManager.update(delta);
-    }
+    public void update(double delta) { controllerManager.update(delta); }
 
     /**
      * Render method (game graphics)
      */
-    public void render() {
-        controllerManager.render();
+    public void render() { controllerManager.render(); }
+
+    long startTime;
+    double runTime = 0.0;
+
+    private void startTimer() {
+        startTime = System.nanoTime();
+    }
+
+    private double getDelta() {
+        return runTime;
+    }
+
+    private int getSleepTime() {
+        int sleepTime = 0;
+        long stopTime, deltaTime;
+
+        stopTime = System.nanoTime();
+        deltaTime = (stopTime - startTime);
+        runTime = deltaTime/1000000.0;
+        sleepTime = (int)((1000/FPS) - runTime);
+        if(sleepTime < 0) { sleepTime = 0; }
+
+        return sleepTime;
     }
 }

@@ -16,7 +16,7 @@ public class MenuController extends Controller {
 
     public void update(double delta) {
         super.update(delta);
-        System.out.println("CONTROLLER (MENU)");
+        //System.out.println("CONTROLLER (MENU)");
 
         if(keyInput.isKeyDownAndRelease(KeyEvent.VK_SPACE)) {
             game.setController("GAME");
@@ -24,12 +24,7 @@ public class MenuController extends Controller {
     }
 
     public void render() {
-        super.render();
-        Graphics2D canvas = graphics.getCanvas();
-
-        // Draw
-        canvas.setColor(Color.BLUE);
-        canvas.fillRect(10,10,100,100);
+        Graphics2D canvas = graphics.getCanvas(Game.BACKGROUND_COLOR);
 
         graphics.renderCanvas();
     }

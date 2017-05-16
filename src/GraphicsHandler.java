@@ -39,8 +39,12 @@ public class GraphicsHandler extends JFrame {
      * Returns CANVAS
      * @return              CANVAS as a Graphics2D object
      */
-    public Graphics2D getCanvas() {
-        return canvas.createGraphics();
+    public Graphics2D getCanvas(Color color) {
+        Graphics2D graphics = canvas.createGraphics();
+        graphics.setColor(Game.BACKGROUND_COLOR);
+        graphics.fillRect(0, 0, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+
+        return graphics;
     }
 
     /**
@@ -49,6 +53,5 @@ public class GraphicsHandler extends JFrame {
     public void renderCanvas() {
         screen = (Graphics2D)getGraphics();
         screen.drawImage(canvas, getInsets().left, getInsets().top, this);
-        canvas.flush();
     }
 }
