@@ -30,7 +30,9 @@ public class ControllerManager {
 
     public boolean setActiveController(String identifier) {
         if(controllers.containsKey(identifier)) {
+            if(this.activeController != null) { this.activeController.dispose(); }
             this.activeController = this.controllers.get(identifier);
+            this.activeController.init();
         } else { return false; }
         return true;
     }
