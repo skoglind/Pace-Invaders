@@ -2,6 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * GraphicsHandler Class
+ * - Prepare and render canvas
+ * @author Fredrik Skoglind
+ */
 public class GraphicsHandler extends JFrame {
     private Graphics2D screen;
     private BufferedImage canvas;
