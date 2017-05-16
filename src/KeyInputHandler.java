@@ -15,13 +15,24 @@ public class KeyInputHandler implements KeyListener {
         private boolean keyDown = true;
         private int pressCount = 1;
         private int downTime = 0;
+        private boolean keyLock = false;
 
         public boolean getKeyDown() { return keyDown; }
         public int getPressCount() { return pressCount; }
         public int getPressTime() { return downTime; }
 
-        public void pressKey() { if(!keyDown) { keyDown = true; pressCount++; } }
+        public void pressKey() {
+            if(!keyLock) {
+                if (!keyDown) {
+                    keyDown = true;
+                    pressCount++;
+                }
+            }
+        }
         public void releaseKey() { keyDown = false; downTime = 0; }
+
+        public void setKeyLock() { keyLock = true; }
+        public void releaseKeyLock() { keyLock = false; }
 
         public void tick() { if(keyDown) { downTime++; } }
     }
@@ -70,6 +81,19 @@ public class KeyInputHandler implements KeyListener {
     }
 
     /**
+     * Returns if key is pressed, and release
+     * @param keyCode           Keycode (eg. KeyEvent.VK_SPACE)
+     * @return                  True/False if key is pressed
+     */
+    public boolean isKeyDownAndRelease(int keyCode) {
+        if(this.isKeyDown(keyCode)) {
+            keys.get(keyCode).releaseKey();
+            keys.get(keyCode).setKeyLock();
+        } else { return false; }
+        return true;
+    }
+
+    /**
      * Returns for how long the key has been pressed
      * @param keyCode           Keycode (eg. KeyEvent.VK_SPACE)
      * @return                  Int
@@ -98,6 +122,7 @@ public class KeyInputHandler implements KeyListener {
         for (HashMap.Entry<Integer, Key> entry : keys.entrySet()) {
             Integer keyCode = entry.getKey();
             keys.get(keyCode).releaseKey();
+            keys.get(keyCode).releaseKeyLock();
         }
     }
 
@@ -114,6 +139,7 @@ public class KeyInputHandler implements KeyListener {
         int keyCode = e.getKeyCode();
         if(keys.containsKey(keyCode)) {
             keys.get(keyCode).releaseKey();
+            keys.get(keyCode).releaseKeyLock();
         }
     }
 

@@ -17,13 +17,24 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener, Mo
         private boolean buttonDown = true;
         private int pressCount = 1;
         private int downTime = 0;
+        private boolean buttonLock = false;
 
         public boolean getButtonDown() { return buttonDown; }
         public int getPressCount() { return pressCount; }
         public int getPressTime() { return downTime; }
 
-        public void pressButton() { if(!buttonDown) { buttonDown = true; pressCount++; } }
+        public void pressButton() {
+            if(!buttonLock) {
+                if (!buttonDown) {
+                    buttonDown = true;
+                    pressCount++;
+                }
+            }
+        }
         public void releaseButton() { buttonDown = false; downTime = 0; }
+
+        public void setButtonLock() { buttonLock = true; }
+        public void releaseButtonLock() { buttonLock = false; }
 
         public void tick() { if(buttonDown) { downTime++; } }
     }
@@ -77,6 +88,19 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener, Mo
     }
 
     /**
+     * Returns if button is pressed, and release
+     * @param button            Button (eg. MouseEvent.BUTTON1)
+     * @return                  True/False if key is pressed
+     */
+    public boolean isButtonDownAndRelease(int button) {
+        if(this.isButtonDown(button)) {
+            buttons.get(button).releaseButton();
+            buttons.get(button).setButtonLock();
+        } else { return false; }
+        return true;
+    }
+
+    /**
      * Returns for how long the button has been pressed
      * @param button            Button (eg. MouseEvent.BUTTON1)
      * @return                  Int
@@ -121,6 +145,7 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener, Mo
         for (HashMap.Entry<Integer, Button> entry : buttons.entrySet()) {
             Integer button = entry.getKey();
             buttons.get(button).releaseButton();
+            buttons.get(button).releaseButtonLock();
         }
     }
 
@@ -137,6 +162,7 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener, Mo
         int button = e.getButton();
         if(buttons.containsKey(button)) {
             buttons.get(button).releaseButton();
+            buttons.get(button).releaseButtonLock();
         }
     }
 
