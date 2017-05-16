@@ -1,5 +1,10 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
+/**
+ * GAME
+ * @author Fredrik Skoglind
+ */
 public class Game {
     // CONSTANTS
     public static final String GAME_TITLE = "Pace Invaders";
@@ -9,12 +14,13 @@ public class Game {
     // HANDLERS
     private GraphicsHandler graphics;
     private AudioHandler audio;
-    //private InputHandler input;
+    private KeyInputHandler keyInput;
+    //private MouseInputHandler mouseInput;
 
     // GETTERS
     public GraphicsHandler getGraphicsHandler() {  return graphics; }
     public AudioHandler getAudioHandler() {  return audio; }
-    //public InputHandler getInputHandler() {  return input; }
+    public KeyInputHandler getKeyInputHandler() {  return keyInput; }
 
     /**
      * Main-method
@@ -30,6 +36,9 @@ public class Game {
      */
     public void init() {
         graphics = new GraphicsHandler();
+        keyInput = new KeyInputHandler(graphics);
+        audio = new AudioHandler("sound/");
+
         this.run();
     }
 
@@ -41,15 +50,26 @@ public class Game {
             double startTime = System.nanoTime();
             this.update(1.0);
             this.render();
-            try { Thread.sleep(1); } catch (Exception e) {}
+            try { Thread.sleep(100); } catch (Exception e) {}
         }
+    }
+
+    /**
+     * Tick method, all tickers
+     */
+    private void tick() {
+        keyInput.tick();
     }
 
     /**
      * Update method (game logics)
      */
     public void update(double delta) {
+        this.tick();
 
+        System.out.println( keyInput.isKeyDown(KeyEvent.VK_ESCAPE) + "=" +
+                keyInput.getKeyPressTime(KeyEvent.VK_ESCAPE) + "=" +
+                keyInput.getKeyPressCount(KeyEvent.VK_ESCAPE) );
     }
 
     /**
