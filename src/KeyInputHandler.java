@@ -3,8 +3,8 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 
 /**
- * InputHandler Class
- * - Catching keys and mouse input
+ * KeyInputHandler Class
+ * - Catching key input
  * @author Fredrik Skoglind
  */
 public class KeyInputHandler implements KeyListener {
@@ -20,23 +20,17 @@ public class KeyInputHandler implements KeyListener {
         public int getPressCount() { return pressCount; }
         public int getPressTime() { return downTime; }
 
-        public void pressKey() {
-            if(!keyDown) { keyDown = true; pressCount++; }
-        }
+        public void pressKey() { if(!keyDown) { keyDown = true; pressCount++; } }
+        public void releaseKey() { keyDown = false; downTime = 0; }
 
-        public void releaseKey() {
-            keyDown = false; downTime = 0;
-        }
-
-        public void tick() {
-            if(keyDown) { downTime++; }
-        }
+        public void tick() { if(keyDown) { downTime++; } }
     }
 
     public KeyInputHandler(GraphicsHandler graphics) {
-        this.graphics = graphics;
         keys = new HashMap<>();
-        addListener();
+
+        this.graphics = graphics;
+        this.addListener();
     }
 
     /**

@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * GAME
@@ -15,12 +16,13 @@ public class Game {
     private GraphicsHandler graphics;
     private AudioHandler audio;
     private KeyInputHandler keyInput;
-    //private MouseInputHandler mouseInput;
+    private MouseInputHandler mouseInput;
 
     // GETTERS
     public GraphicsHandler getGraphicsHandler() {  return graphics; }
     public AudioHandler getAudioHandler() {  return audio; }
     public KeyInputHandler getKeyInputHandler() {  return keyInput; }
+    public MouseInputHandler getMouseInputHandler() {  return mouseInput; }
 
     /**
      * Main-method
@@ -35,8 +37,10 @@ public class Game {
      * Initialize game
      */
     public void init() {
+        // HANDLERS
         graphics = new GraphicsHandler();
         keyInput = new KeyInputHandler(graphics);
+        mouseInput = new MouseInputHandler(graphics);
         audio = new AudioHandler("sound/");
 
         this.run();
@@ -59,6 +63,7 @@ public class Game {
      */
     private void tick() {
         keyInput.tick();
+        mouseInput.tick();
     }
 
     /**
@@ -67,9 +72,15 @@ public class Game {
     public void update(double delta) {
         this.tick();
 
-        System.out.println( keyInput.isKeyDown(KeyEvent.VK_ESCAPE) + "=" +
-                keyInput.getKeyPressTime(KeyEvent.VK_ESCAPE) + "=" +
-                keyInput.getKeyPressCount(KeyEvent.VK_ESCAPE) );
+        //System.out.println( keyInput.isKeyDown(KeyEvent.VK_ESCAPE) + "=" +
+        //        keyInput.getKeyPressTime(KeyEvent.VK_ESCAPE) + "=" +
+        //        keyInput.getKeyPressCount(KeyEvent.VK_ESCAPE) );
+
+        //System.out.println( mouseInput.isButtonDown(MouseEvent.BUTTON1) + "=" +
+        //        mouseInput.getButtonPressTime(MouseEvent.BUTTON1) + "=" +
+        //        mouseInput.getButtonPressCount(MouseEvent.BUTTON1) );
+
+        //System.out.println(mouseInput.getMousePosition().toString() + "=" + mouseInput.getMouseOnScreen());
     }
 
     /**
