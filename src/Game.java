@@ -21,11 +21,16 @@ public class Game {
     // CONTROLLER
     private ControllerManager controllerManager;
 
+    // DATA
+    private int currentFPS = 0;
+    private int lastFrameTime = 0;
+
     // GETTERS
     public GraphicsHandler getGraphicsHandler() {  return graphics; }
     public AudioHandler getAudioHandler() {  return audio; }
     public KeyInputHandler getKeyInputHandler() {  return keyInput; }
     public MouseInputHandler getMouseInputHandler() {  return mouseInput; }
+    public int getCurrentFPS() { return currentFPS; }
 
     // SETTERS
     public void setController(String identifier) {
@@ -68,13 +73,15 @@ public class Game {
      */
     private void run() {
         while(true) {
-            this.startTimer();
+            this.startFrameTimer();
 
             this.tick();
             this.update(this.getDelta());
             this.render();
 
-            try { Thread.sleep(this.getSleepTime()); } catch (Exception e) {}
+            this.stopFrameTimer();
+
+            try { Thread.sleep(this.getFrameSleepTime()); } catch (Exception e) {}
         }
     }
 
@@ -97,27 +104,53 @@ public class Game {
      */
     public void render() { controllerManager.render(); }
 
-    long startTime;
-    double runTime = 0.0;
+    public void drawDevData(Graphics2D canvas) {
+        Color textColor = Color.BLACK;
+        Color backgroundColor = Color.WHITE;
 
-    private void startTimer() {
-        startTime = System.nanoTime();
+        // Draw background
+        canvas.setColor(backgroundColor);
+        canvas.fillRect(2, 2, 60, 30);
+
+        // Draw data
+        canvas.setColor(textColor);
+        canvas.drawString( "FPS: " + getCurrentFPS(), 10, 20);
     }
 
-    private double getDelta() {
-        return runTime;
-    }
+    /* FPS Delta */
+        private double deltaFrameTime = 0.0;
+        private long startFrameTime, stopFrameTime;
+        private int frameCount = 0;
+        private int msElapsed = 0;
 
-    private int getSleepTime() {
-        int sleepTime = 0;
-        long stopTime, deltaTime;
+        private void startFrameTimer() {
+            startFrameTime = System.nanoTime();
+        }
 
-        stopTime = System.nanoTime();
-        deltaTime = (stopTime - startTime);
-        runTime = deltaTime/1000000.0;
-        sleepTime = (int)((1000/FPS) - runTime);
-        if(sleepTime < 0) { sleepTime = 0; }
+        private void stopFrameTimer() {
+            stopFrameTime = System.nanoTime();
+        }
 
-        return sleepTime;
-    }
+        private int getFrameSleepTime() {
+            if(this.msElapsed >= 1000) {
+                this.currentFPS = this.frameCount;
+                this.frameCount = 0;
+                this.msElapsed = 0;
+            }
+
+            deltaFrameTime = (stopFrameTime - startFrameTime) / 1000000.0; // In ms
+            int sleepTime = (1000/FPS) - (int)deltaFrameTime;
+            if(sleepTime < 0) { sleepTime = 0; }
+
+            this.lastFrameTime = ((int)deltaFrameTime + sleepTime);
+            this.msElapsed += this.lastFrameTime;
+            this.frameCount++;
+
+            return sleepTime;
+        }
+
+        private double getDelta() {
+            return this.deltaFrameTime;
+        }
+    /* - - - - */
 }

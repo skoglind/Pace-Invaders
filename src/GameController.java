@@ -31,6 +31,8 @@ public class GameController extends Controller {
         spriteSet.tick();
     }
 
+    private int x;
+    private int y;
     public void update(double delta) {
         super.update(delta);
 
@@ -41,6 +43,11 @@ public class GameController extends Controller {
         if(keyInput.isKeyDownAndRelease(KeyEvent.VK_ENTER)) {
             spriteSet.startAnimation();
         }
+
+        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { x -= 5; }
+        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { x += 5; }
+        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { y -= 5; }
+        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { y += 5; }
     }
 
     public void render() {
@@ -52,6 +59,10 @@ public class GameController extends Controller {
             }
         }
 
+        canvas.setColor(Color.BLUE);
+        canvas.fillRect(x, y, 40, 40);
+
+        game.drawDevData(canvas);
         graphics.renderCanvas();
     }
 }
