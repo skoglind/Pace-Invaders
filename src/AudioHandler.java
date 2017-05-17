@@ -40,7 +40,7 @@ public class AudioHandler {
      * @return              AudioClip as object
      */
     public AudioClip playClip(String filename) {
-        return playClip(filename, 0.0, 0.0);
+        return playClip(filename, 0.0, 0.0, 1);
     }
 
     /**
@@ -50,9 +50,10 @@ public class AudioHandler {
      * @param pan           -1.0 Left Channel, 1.0 Right Channel
      * @return              AudioClip as object
      */
-    public AudioClip playClip(String filename, Double volume, Double pan) {
+    public AudioClip playClip(String filename, Double volume, Double pan, int loopCount) {
         if(!audioClips.containsKey(filename)) {
             AudioClip audioClip = audioClips.get(filename);
+            audioClip.setCycleCount(loopCount);
             audioClip.play(volume, 0.0, 1.0, pan, 0);
             return audioClip;
         } else { return null; }
