@@ -51,6 +51,7 @@ public class Game {
     public void setController(String identifier) {
         controllerManager.setActiveController(identifier);
     }
+    public void loadData() { loadSpriteSheets(); loadMusic(); loadSFX(); loadFonts(); }
 
     /**
      * Main-method
@@ -79,10 +80,7 @@ public class Game {
         controllerManager.addController("MENU", new MenuController(this));
 
         // Load gamedata
-        loadSpriteSheets();
-        loadMusic();
-        loadSFX();
-        loadFonts();
+        loadData();
 
         // Set Active Controller
         controllerManager.setActiveController("GAME");

@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
  */
 public class GameController extends Controller {
     SpriteSet spriteSet;
+    MovingEntity testEntity;
+
     AudioClip backgroundMusic;
 
     public GameController(Game game) {
@@ -33,12 +35,17 @@ public class GameController extends Controller {
 
         spriteSet = new SpriteSet(bi1, bi2, bi3, bi4, bi5);
 
+        testEntity = new MovingEntity();
+        testEntity.setPosition(new Vector2D(50,50));
+        testEntity.setSize(new Dimension(20,20));
+
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
 
     public void tick() {
         super.tick();
         spriteSet.tick();
+        testEntity.tick();
     }
 
     private int x;
@@ -54,10 +61,10 @@ public class GameController extends Controller {
             spriteSet.startAnimation();
         }
 
-        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { x -= 5; }
-        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { x += 5; }
-        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { y -= 5; }
-        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { y += 5; }
+        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntity.setAccelerationX( testEntity.getAccelerationX()-0.01 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { testEntity.setAccelerationX( testEntity.getAccelerationX()+0.01 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { testEntity.setAccelerationY( testEntity.getAccelerationY()-0.01 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { testEntity.setAccelerationY( testEntity.getAccelerationY()+0.01 ); }
 
         if(keyInput.isKeyDownAndRelease(KeyEvent.VK_L)) {
             audio.playClip(game.getSFX("shoot"));
@@ -67,14 +74,11 @@ public class GameController extends Controller {
     public void render() {
         Graphics2D canvas = graphics.getCanvas(Game.BACKGROUND_COLOR);
 
-        for(int x = 0; x < Game.SCREEN_WIDTH; x += 20) {
-            for(int y = 0; y < Game.SCREEN_HEIGHT; y +=20) {
-                canvas.drawImage(spriteSet.getSprite(), x, y, graphics);
-            }
+        if(x > 0 && x < game.SCREEN_WIDTH && y > 0 && y < game.SCREEN_HEIGHT) {
+            canvas.drawImage(spriteSet.getSprite(), x, y, graphics);
         }
 
-        canvas.setColor(Color.BLUE);
-        canvas.fillRect(x, y, 40, 40);
+        testEntity.Draw(canvas);
 
         game.drawDevData(canvas);
         graphics.renderCanvas();

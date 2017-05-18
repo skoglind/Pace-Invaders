@@ -45,7 +45,7 @@ public class AudioHandler {
      * Plays AudioClip
      * @param filename      Filename (eg. clip.wav)
      * @param volume        0.0 <> 1.0
-     * @param pan           -1.0 Left Channel, 1.0 Right Channel
+     * @param balance       -1.0 Left Channel, 1.0 Right Channel
      * @return              AudioClip as object
      */
     public AudioClip playClip(String filename, Double volume, Double balance, int loopCount) {
