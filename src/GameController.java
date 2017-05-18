@@ -1,3 +1,5 @@
+import javafx.scene.media.AudioClip;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -8,13 +10,19 @@ import java.awt.image.BufferedImage;
  */
 public class GameController extends Controller {
     SpriteSet spriteSet;
+    AudioClip backgroundMusic;
 
     public GameController(Game game) {
         super(game);
     }
 
+    public void dispose() {
+        if(backgroundMusic.isPlaying()) { backgroundMusic.stop(); }
+        backgroundMusic = null;
+    }
+
     public void init() {
-        SpriteSheet ss = new SpriteSheet("media/animation.png");
+        SpriteSheet ss = new SpriteSheet("media/spritesheet/animation.png");
 
         BufferedImage bi1, bi2, bi3, bi4, bi5;
         bi1 = ss.getSprite(0, 0, 20, 20);
@@ -24,6 +32,8 @@ public class GameController extends Controller {
         bi5 = ss.getSprite(80, 0, 20, 20);
 
         spriteSet = new SpriteSet(bi1, bi2, bi3, bi4, bi5);
+
+        backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
 
     public void tick() {
@@ -48,6 +58,10 @@ public class GameController extends Controller {
         if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { x += 5; }
         if(keyInput.isKeyDown(KeyEvent.VK_UP)) { y -= 5; }
         if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { y += 5; }
+
+        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_L)) {
+            audio.playClip(game.getSFX("shoot"));
+        }
     }
 
     public void render() {

@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * GAME
@@ -11,6 +13,9 @@ public class Game {
     public static final int SCREEN_HEIGHT = 600;
     public static final int FPS = 60;
     public static final Color BACKGROUND_COLOR = Color.BLACK;
+    public static final String SFX_FOLDER = "media/sfx/";
+    public static final String MUSIC_FOLDER = "media/music/";
+    public static final String SPRITESHEETS_FOLDER = "media/spritesheet/";
 
     // HANDLERS
     private GraphicsHandler graphics;
@@ -22,6 +27,8 @@ public class Game {
     private ControllerManager controllerManager;
 
     // DATA
+    private HashMap<String, String> availableSFX;
+    private HashMap<String, String> availableMusic;
     private int currentFPS = 0;
     private int lastFrameTime = 0;
 
@@ -31,6 +38,14 @@ public class Game {
     public KeyInputHandler getKeyInputHandler() {  return keyInput; }
     public MouseInputHandler getMouseInputHandler() {  return mouseInput; }
     public int getCurrentFPS() { return currentFPS; }
+    public String getSFX(String name) {
+        if(availableSFX.containsKey(name)) { return availableSFX.get(name); }
+        return null;
+    }
+    public String getMusic(String name) {
+        if(availableMusic.containsKey(name)) { return availableMusic.get(name); }
+        return null;
+    }
 
     // SETTERS
     public void setController(String identifier) {
@@ -54,7 +69,7 @@ public class Game {
         graphics = new GraphicsHandler();
         keyInput = new KeyInputHandler(graphics);
         mouseInput = new MouseInputHandler(graphics);
-        audio = new AudioHandler("sound/");
+        audio = new AudioHandler();
 
         // ControllerManager
         controllerManager = new ControllerManager();
@@ -63,10 +78,57 @@ public class Game {
         controllerManager.addController("GAME", new GameController(this));
         controllerManager.addController("MENU", new MenuController(this));
 
+        // Load gamedata
+        loadSpriteSheets();
+        loadMusic();
+        loadSFX();
+        loadFonts();
+
         // Set Active Controller
         controllerManager.setActiveController("GAME");
         this.run();
     }
+
+    /**
+     * Load SFX Files
+     */
+    public void loadSFX() {
+        availableSFX = getFilesInFolder(SFX_FOLDER, "wav");
+        if(availableSFX != null) {
+            for (HashMap.Entry<String, String> entry : availableSFX.entrySet()) {
+                String fullFilepath = entry.getValue();
+                audio.loadClip(fullFilepath);
+            }
+        }
+    }
+
+    /**
+     * Load Music Files
+     */
+    public void loadMusic() {
+        availableMusic = getFilesInFolder(MUSIC_FOLDER, "mp3");
+        if(availableMusic != null) {
+            for (HashMap.Entry<String, String> entry : availableMusic.entrySet()) {
+                String fullFilepath = entry.getValue();
+                audio.loadClip(fullFilepath);
+            }
+        }
+    }
+
+    /**
+     * Load SpriteSheet
+     */
+    public void loadSpriteSheets() {
+
+    }
+
+    /**
+     * Load Fonts
+     */
+    public void loadFonts() {
+
+    }
+
 
     /**
      * Run game
@@ -104,6 +166,9 @@ public class Game {
      */
     public void render() { controllerManager.render(); }
 
+    /**
+     * Draw developer data to screen
+     */
     public void drawDevData(Graphics2D canvas) {
         Color textColor = Color.BLACK;
         Color backgroundColor = Color.WHITE;
@@ -115,6 +180,48 @@ public class Game {
         // Draw data
         canvas.setColor(textColor);
         canvas.drawString( "FPS: " + getCurrentFPS(), 10, 20);
+    }
+
+    /**
+     * Get the filename extension
+     * @param filename              Filename
+     * @return                      String with the extension (in lowercase)
+     */
+    private String getFilenameExtension(String filename) {
+        String fileNameExtension = "";
+        int i = filename.lastIndexOf('.');
+        if (i >= 0) { fileNameExtension = filename.substring(i+1); }
+        return fileNameExtension.toLowerCase();
+    }
+
+    /**
+     * Return a HashMap with all files in a folder, filtered by extension
+     * @param seekFolder            Folder to seek
+     * @param extension             Extension to filter by
+     * @return                      HashMap with all files found
+     */
+    private HashMap<String, String> getFilesInFolder(String seekFolder, String extension) {
+        File folder = new File(seekFolder);
+        File[] listOfFiles = folder.listFiles();
+        String fileExtension = extension;
+
+        HashMap<String, String> allFiles = new HashMap<>();
+
+        if(listOfFiles != null) {
+            for (File file : listOfFiles) {
+                String filepath = folder.getPath();
+                String filename = file.getName();
+                String filenameExt = getFilenameExtension(filename);
+                String fullFilepath = filepath + "/" + filename;
+                String filenameWithoutExt = (filename.substring(0, (filename.length() - (filenameExt.length()+1)))).toLowerCase();
+
+                if(file.isFile() && file.canRead() && fileExtension.compareToIgnoreCase(filenameExt) == 0) {
+                    allFiles.put(filenameWithoutExt, fullFilepath);
+                }
+            }
+        }
+
+        return allFiles;
     }
 
     /* FPS Delta */

@@ -26,6 +26,7 @@ public class MenuController extends Controller {
     public void render() {
         Graphics2D canvas = graphics.getCanvas(Game.BACKGROUND_COLOR);
 
+        game.drawDevData(canvas);
         graphics.renderCanvas();
     }
 }
