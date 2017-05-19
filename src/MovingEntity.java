@@ -10,6 +10,7 @@ public class MovingEntity extends Entity {
     private Vector2D maxVelocity;
     private Vector2D currentVelocity;
     private Vector2D acceleration;
+    private double friction = 0.85;
 
     // GETTERS
     public Vector2D getMaxVelocity() { return maxVelocity; }
@@ -48,10 +49,31 @@ public class MovingEntity extends Entity {
 
     public void tick() {
         super.tick();
-        setPositionX(getPositionX() + getCurrentVelocityX());
-        setPositionY(getPositionY() + getCurrentVelocityY());
+
+        setCurrentVelocityX( getCurrentVelocityX() * friction );
+        setCurrentVelocityY( getCurrentVelocityY() * friction );
 
         setCurrentVelocityX(getCurrentVelocityX() + getAccelerationX());
         setCurrentVelocityY(getCurrentVelocityY() + getAccelerationY());
+
+        setAccelerationX(0);
+        setAccelerationY(0);
+
+        if(Math.abs(getCurrentVelocityX()) < 0.1) { setCurrentVelocityX(0); }
+        if(Math.abs(getCurrentVelocityY()) < 0.1) { setCurrentVelocityY(0); }
+
+        if(getCurrentVelocityX() > getMaxVelocityX()) { setCurrentVelocityX(getMaxVelocityX()); }
+        if(getCurrentVelocityY() > getMaxVelocityY()) { setCurrentVelocityY(getMaxVelocityY()); }
+
+        /*System.out.println("vx " + getCurrentVelocityX());
+        System.out.println("vy " + getCurrentVelocityY());
+        System.out.println("ax" + getAccelerationX());
+        System.out.println("ay" + getAccelerationY());
+        System.out.println( "" );*/
+
+        setPositionX(getPositionX() + getCurrentVelocityX());
+        setPositionY(getPositionY() + getCurrentVelocityY());
+
+
     }
 }

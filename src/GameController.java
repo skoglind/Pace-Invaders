@@ -38,6 +38,7 @@ public class GameController extends Controller {
         testEntity = new MovingEntity();
         testEntity.setPosition(new Vector2D(50,50));
         testEntity.setSize(new Dimension(20,20));
+        testEntity.setMaxVelocity(new Vector2D(10,10));
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
@@ -61,10 +62,10 @@ public class GameController extends Controller {
             spriteSet.startAnimation();
         }
 
-        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntity.setAccelerationX( testEntity.getAccelerationX()-0.01 ); }
-        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { testEntity.setAccelerationX( testEntity.getAccelerationX()+0.01 ); }
-        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { testEntity.setAccelerationY( testEntity.getAccelerationY()-0.01 ); }
-        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { testEntity.setAccelerationY( testEntity.getAccelerationY()+0.01 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntity.setAccelerationX( testEntity.getAccelerationX()-2.0 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { testEntity.setAccelerationX( testEntity.getAccelerationX()+2.0 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { testEntity.setAccelerationY( testEntity.getAccelerationY()-2.0 ); }
+        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { testEntity.setAccelerationY( testEntity.getAccelerationY()+2.0 ); }
 
         if(keyInput.isKeyDownAndRelease(KeyEvent.VK_L)) {
             audio.playClip(game.getSFX("shoot"));
