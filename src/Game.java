@@ -30,6 +30,7 @@ public class Game {
     // DATA
     private HashMap<String, String> availableSFX;
     private HashMap<String, String> availableMusic;
+    private HashMap<String, SpriteSheet> spriteSheets;
     private int currentFPS = 0;
     private int lastFrameTime = 0;
 
@@ -46,6 +47,11 @@ public class Game {
     public String getMusic(String name) {
         if(availableMusic.containsKey(name)) { return availableMusic.get(name); }
         return null;
+    }
+    public SpriteSheet getSpriteSheet(String name) {
+        if(spriteSheets.containsKey(name)) {
+            return spriteSheets.get(name);
+        } else { return null; }
     }
 
     // SETTERS
@@ -118,7 +124,13 @@ public class Game {
      * Load SpriteSheet
      */
     public void loadSpriteSheets() {
+        String spriteSheetFolder = "media/spritesheet/";
+        spriteSheets = new HashMap<>();
 
+        spriteSheets.put("player_green", new SpriteSheet(spriteSheetFolder + "green_anim.png"));
+        spriteSheets.put("player_red", new SpriteSheet(spriteSheetFolder + "red_anim.png"));
+        spriteSheets.put("player_violet", new SpriteSheet(spriteSheetFolder + "violet_anim.png"));
+        spriteSheets.put("player_white", new SpriteSheet(spriteSheetFolder + "white_anim.png"));
     }
 
     /**

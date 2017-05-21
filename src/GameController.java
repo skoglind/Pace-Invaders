@@ -8,10 +8,11 @@ import java.awt.event.KeyEvent;
  * @author Fredrik Skoglind
  */
 public class GameController extends Controller {
-    SpriteSet spriteSet;
-    MovingEntity testEntityA;
-    MovingEntity testEntityB;
+    // ENTITIES
+    Player player;
+    Entity entity;
 
+    // MUSIC & SFX
     AudioClip backgroundMusic;
 
     public GameController(Game game) {
@@ -24,72 +25,45 @@ public class GameController extends Controller {
     }
 
     public void init() {
-        testEntityA = new MovingEntity(game);
-        testEntityA.setPosition(new Vector2D(50,50));
-        testEntityA.setSize(new Dimension(20,20));
-        testEntityA.setFriction(0.75);
-        testEntityA.setMaxVelocity(new Vector2D(12,12));
-        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/green_anim.png"), "green", 20, 20, 5, 2);
-        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/red_anim.png"), "red", 20, 20, 5, 1);
-        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/violet_anim.png"), "violet", 20, 20, 5, 1);
-        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/white_anim.png"), "white", 20, 20, 5);
-        testEntityA.setActiveSpriteSet("white");
-        testEntityA.setEntityType(Entity.EntityType.PLAYER);
-        testEntityA.setHitboxType(Entity.HitboxType.CIRCLE);
+        player = new Player(game);
+        player.setPosition(new Vector2D(50, 50));
 
-        testEntityB = new MovingEntity(game);
-        testEntityB.setPosition(new Vector2D(100,100));
-        testEntityB.setSize(new Dimension(80,80));
-        testEntityB.setFriction(0.75);
-        testEntityB.setMaxVelocity(new Vector2D(12,12));
-        testEntityA.setEntityType(Entity.EntityType.OPAQUE);
-        testEntityB.setHitboxType(Entity.HitboxType.RECTANGLE);
+        entity = new MovingEntity(game);
+        entity.setPosition(new Vector2D(100,100));
+        entity.setSize(new Dimension(80,80));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
 
     public void tick() {
         super.tick();
-        testEntityA.tick();
-        testEntityB.tick();
+        player.tick();
+        entity.tick();
     }
 
-    private int x;
-    private int y;
     public void update(double delta) {
         super.update(delta);
 
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_SPACE)) {
+        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_ENTER)) {
             game.setController("MENU");
         }
 
-        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntityA.accelerateX(-2.0); }
-        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { testEntityA.accelerateX(2.0); }
-        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { testEntityA.accelerateY(-2.0); }
-        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { testEntityA.accelerateY(2.0); }
-
-        if(testEntityA.hasCollision(testEntityB)) {
-            testEntityA.hitboxColor = Color.YELLOW;
-            testEntityB.hitboxColor = Color.YELLOW;
+        if(player.hasCollision(entity)) {
+            player.hitboxColor = Color.YELLOW;
+            entity.hitboxColor = Color.YELLOW;
         } else {
-            testEntityA.hitboxColor = Color.BLUE;
-            testEntityB.hitboxColor = Color.BLUE;
-        }
-
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_L)) {
-            audio.playClip(game.getSFX("shoot"));
+            player.hitboxColor = Color.BLUE;
+            entity.hitboxColor = Color.BLUE;
         }
     }
 
     public void render() {
         Graphics2D canvas = graphics.getCanvas(Game.BACKGROUND_COLOR);
 
-        if(x > 0 && x < game.SCREEN_WIDTH && y > 0 && y < game.SCREEN_HEIGHT) {
-            canvas.drawImage(spriteSet.getSprite(), x, y, graphics);
-        }
-
-        testEntityA.Draw(canvas);
-        testEntityB.Draw(canvas);
+        player.Draw(canvas);
+        entity.Draw(canvas);
 
         game.drawDevData(canvas);
         graphics.renderCanvas();
