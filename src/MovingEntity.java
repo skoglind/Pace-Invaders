@@ -45,7 +45,8 @@ public class MovingEntity extends Entity {
 
     public void setFriction(double friction) { this.friction = friction; }
 
-    public MovingEntity() {
+    public MovingEntity(Game game) {
+        super(game);
         this.maxVelocity = new Vector2D();
         this.currentVelocity = new Vector2D();
         this.acceleration = new Vector2D();

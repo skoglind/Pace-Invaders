@@ -2,7 +2,6 @@ import javafx.scene.media.AudioClip;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 /**
  * GameController
@@ -24,29 +23,19 @@ public class GameController extends Controller {
     }
 
     public void init() {
-        SpriteSheet ss = new SpriteSheet("media/spritesheet/animation.png");
-
-        BufferedImage bi1, bi2, bi3, bi4, bi5;
-        bi1 = ss.getSprite(0, 0, 20, 20);
-        bi2 = ss.getSprite(20, 0, 20, 20);
-        bi3 = ss.getSprite(40, 0, 20, 20);
-        bi4 = ss.getSprite(60, 0, 20, 20);
-        bi5 = ss.getSprite(80, 0, 20, 20);
-
-        spriteSet = new SpriteSet(bi1, bi2, bi3, bi4, bi5);
-
-        testEntity = new MovingEntity();
+        testEntity = new MovingEntity(game);
         testEntity.setPosition(new Vector2D(50,50));
         testEntity.setSize(new Dimension(20,20));
         testEntity.setFriction(0.75);
         testEntity.setMaxVelocity(new Vector2D(12,12));
+        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/animation.png"), "standard", 20, 20, 5);
+        testEntity.setActiveSpriteSet("standard");
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
 
     public void tick() {
         super.tick();
-        spriteSet.tick();
         testEntity.tick();
     }
 
