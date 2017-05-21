@@ -1,5 +1,3 @@
-import javafx.geometry.Point2D;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;

@@ -1,6 +1,3 @@
-import java.awt.*;
-import java.awt.geom.Point2D;
-
 /**
  * MovingEntity Class
  * - Moving Entities
