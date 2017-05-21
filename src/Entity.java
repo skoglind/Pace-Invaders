@@ -23,6 +23,15 @@ public class Entity {
         CIRCLE, RECTANGLE
     }
 
+    private EntityType entityType;
+    public enum EntityType {
+        PLAYER,
+        SHOT,
+        ENEMY,
+        OPAQUE,
+        TRANSPARENT
+    }
+
     // GETTERS
     public Vector2D getPosition() { return position; }
     public double getPositionX() { return position.getX(); }
@@ -35,6 +44,8 @@ public class Entity {
     public HitboxType getHitboxType() { return this.hitboxType; }
     public Rectangle getHitboxRectangle() { return new Rectangle((int)position.getX(), (int)position.getY(), (int)size.getWidth(), (int)size.getHeight()); }
     public Circle2D getHitboxCircle() { return new Circle2D((position.getX() + size.width/2), (position.getY() + size.height/2), size.width/2); }
+
+    public EntityType getEntityType() { return this.entityType; }
 
     // SETTERS
     public void setPosition(Vector2D position) { this.position = position; }
@@ -53,6 +64,8 @@ public class Entity {
 
     public void setHitboxType(HitboxType hitboxType) { this.hitboxType = hitboxType; }
 
+    public void setEntityType(EntityType entityType) { this.entityType = entityType; }
+
     public Entity(Game game) {
         this.game = game;
         this.spriteSets = new HashMap<>();
@@ -61,6 +74,7 @@ public class Entity {
         this.size = new Dimension(0,0);
         this.activeSpriteSet = null;
         this.hitboxType = HitboxType.RECTANGLE;
+        this.entityType = EntityType.TRANSPARENT;
     }
 
     public void tick() {
@@ -68,19 +82,21 @@ public class Entity {
     }
 
     public void Draw(Graphics2D canvas) {
-        //if(spriteSets.containsKey(activeSpriteSet)) {
-        //    canvas.drawImage(spriteSets.get(activeSpriteSet).getSprite(), (int)getPositionX(), (int)getPositionY(), game.getGraphicsHandler());
-        //} else {
+        if(spriteSets.containsKey(activeSpriteSet)) {
+            canvas.drawImage(spriteSets.get(activeSpriteSet).getSprite(), (int)getPositionX(), (int)getPositionY(), game.getGraphicsHandler());
+        }
+
+        if(game.showHitbox) {
             canvas.setColor(hitboxColor);
             switch(hitboxType) {
                 case RECTANGLE:
-                    canvas.fillRect((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getHeight());
+                    canvas.drawRect((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getHeight());
                     break;
                 case CIRCLE:
-                    canvas.fillOval((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getWidth());
+                    canvas.drawOval((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getWidth());
                     break;
             }
-        //}
+        }
     }
 
     private void updateSpriteSet() {
@@ -126,18 +142,33 @@ public class Entity {
                     case RECTANGLE:
                         return entityA.getHitboxRectangle().intersects(entityB.getHitboxRectangle());
                     case CIRCLE:
-                        return false;
+                        return intersectRectCircle(entityB.getHitboxCircle(), entityA.getHitboxRectangle());
                 }
                 return false;
             case CIRCLE:
                 switch(entityB.hitboxType) {
                     case RECTANGLE:
-                        return false;
+                        return intersectRectCircle(entityA.getHitboxCircle(), entityB.getHitboxRectangle());
                     case CIRCLE:
                         return entityA.getHitboxCircle().intersects(entityB.getHitboxCircle());
                 }
                 return false;
         }
         return false;
+    }
+
+    private boolean intersectRectCircle(Circle2D circle, Rectangle rect) {
+        double distanceX = Math.abs(circle.getX() - rect.getX() - (rect.getWidth()/2) );
+        double distanceY = Math.abs(circle.getY() - rect.getY() - (rect.getHeight()/2) );
+
+        if( distanceX > ((rect.getWidth()/2) + circle.getRadius()) ) { return false; }
+        if( distanceY > ((rect.getHeight()/2) + circle.getRadius()) ) { return false; }
+
+        if( distanceX <= (rect.getWidth()/2) ) { return true; }
+        if( distanceY <= (rect.getHeight()/2) ) { return true; }
+
+        double dx = distanceX - (rect.getWidth()/2);
+        double dy = distanceY - (rect.getHeight()/2);
+        return ( (dx*dx)+(dy*dy) <= (circle.getRadius()*circle.getRadius()));
     }
 }

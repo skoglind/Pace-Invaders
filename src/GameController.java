@@ -26,7 +26,7 @@ public class GameController extends Controller {
     public void init() {
         testEntityA = new MovingEntity(game);
         testEntityA.setPosition(new Vector2D(50,50));
-        testEntityA.setSize(new Dimension(40,40));
+        testEntityA.setSize(new Dimension(20,20));
         testEntityA.setFriction(0.75);
         testEntityA.setMaxVelocity(new Vector2D(12,12));
         testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/green_anim.png"), "green", 20, 20, 5, 2);
@@ -34,14 +34,16 @@ public class GameController extends Controller {
         testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/violet_anim.png"), "violet", 20, 20, 5, 1);
         testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/white_anim.png"), "white", 20, 20, 5);
         testEntityA.setActiveSpriteSet("white");
+        testEntityA.setEntityType(Entity.EntityType.PLAYER);
         testEntityA.setHitboxType(Entity.HitboxType.CIRCLE);
 
         testEntityB = new MovingEntity(game);
         testEntityB.setPosition(new Vector2D(100,100));
-        testEntityB.setSize(new Dimension(40,40));
+        testEntityB.setSize(new Dimension(80,80));
         testEntityB.setFriction(0.75);
         testEntityB.setMaxVelocity(new Vector2D(12,12));
-        testEntityB.setHitboxType(Entity.HitboxType.CIRCLE);
+        testEntityA.setEntityType(Entity.EntityType.OPAQUE);
+        testEntityB.setHitboxType(Entity.HitboxType.RECTANGLE);
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }

@@ -16,6 +16,7 @@ public class Game {
     public static final String SFX_FOLDER = "media/sfx/";
     public static final String MUSIC_FOLDER = "media/music/";
     public static final String SPRITESHEETS_FOLDER = "media/spritesheet/";
+    public static final boolean showHitbox = true;
 
     // HANDLERS
     private GraphicsHandler graphics;
