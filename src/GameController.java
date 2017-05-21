@@ -28,8 +28,11 @@ public class GameController extends Controller {
         testEntity.setSize(new Dimension(20,20));
         testEntity.setFriction(0.75);
         testEntity.setMaxVelocity(new Vector2D(12,12));
-        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/animation.png"), "standard", 20, 20, 5);
-        testEntity.setActiveSpriteSet("standard");
+        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/green_anim.png"), "green", 20, 20, 5, 2);
+        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/red_anim.png"), "red", 20, 20, 5, 1);
+        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/violet_anim.png"), "violet", 20, 20, 5, 1);
+        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/white_anim.png"), "white", 20, 20, 5);
+        testEntity.setActiveSpriteSet("white");
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
@@ -48,8 +51,20 @@ public class GameController extends Controller {
             game.setController("MENU");
         }
 
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_ENTER)) {
-            spriteSet.startAnimation();
+        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_E)) {
+            testEntity.setActiveSpriteSet("green");
+        }
+
+        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_R)) {
+            testEntity.setActiveSpriteSet("red");
+        }
+
+        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_T)) {
+            testEntity.setActiveSpriteSet("violet");
+        }
+
+        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_Y)) {
+            testEntity.setActiveSpriteSet("white");
         }
 
         if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntity.accelerateX(-2.0); }

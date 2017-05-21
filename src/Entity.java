@@ -68,8 +68,12 @@ public class Entity {
         }
     }
 
-    public void addSpriteSet(SpriteSheet spritesheet, String name, int width, int height, int count) {
-        this.addSpriteSet(spritesheet, name, width, height, count, true, SpriteSet.INFINITE, 0.0);
+    public void addSpriteSet(SpriteSheet spritesheet, String name, int width, int height, int imageCount) {
+        this.addSpriteSet(spritesheet, name, width, height, imageCount, true, SpriteSet.INFINITE, 0.0);
+    }
+
+    public void addSpriteSet(SpriteSheet spritesheet, String name, int width, int height, int imageCount, int loopCount) {
+        this.addSpriteSet(spritesheet, name, width, height, imageCount, true, loopCount, 0.0);
     }
 
     public void addSpriteSet(SpriteSheet spritesheet, String name, int width, int height, int imageCount, boolean startAnimation, int loopCount, double animationSpeed) {
