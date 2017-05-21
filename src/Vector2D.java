@@ -1,3 +1,7 @@
+/**
+ * Vector2D Class
+ * @author Fredrik Skoglind
+ */
 public class Vector2D {
     private double x;
     private double y;

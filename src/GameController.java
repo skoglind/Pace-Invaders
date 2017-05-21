@@ -9,7 +9,8 @@ import java.awt.event.KeyEvent;
  */
 public class GameController extends Controller {
     SpriteSet spriteSet;
-    MovingEntity testEntity;
+    MovingEntity testEntityA;
+    MovingEntity testEntityB;
 
     AudioClip backgroundMusic;
 
@@ -23,23 +24,32 @@ public class GameController extends Controller {
     }
 
     public void init() {
-        testEntity = new MovingEntity(game);
-        testEntity.setPosition(new Vector2D(50,50));
-        testEntity.setSize(new Dimension(20,20));
-        testEntity.setFriction(0.75);
-        testEntity.setMaxVelocity(new Vector2D(12,12));
-        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/green_anim.png"), "green", 20, 20, 5, 2);
-        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/red_anim.png"), "red", 20, 20, 5, 1);
-        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/violet_anim.png"), "violet", 20, 20, 5, 1);
-        testEntity.addSpriteSet(new SpriteSheet("media/spritesheet/white_anim.png"), "white", 20, 20, 5);
-        testEntity.setActiveSpriteSet("white");
+        testEntityA = new MovingEntity(game);
+        testEntityA.setPosition(new Vector2D(50,50));
+        testEntityA.setSize(new Dimension(40,40));
+        testEntityA.setFriction(0.75);
+        testEntityA.setMaxVelocity(new Vector2D(12,12));
+        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/green_anim.png"), "green", 20, 20, 5, 2);
+        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/red_anim.png"), "red", 20, 20, 5, 1);
+        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/violet_anim.png"), "violet", 20, 20, 5, 1);
+        testEntityA.addSpriteSet(new SpriteSheet("media/spritesheet/white_anim.png"), "white", 20, 20, 5);
+        testEntityA.setActiveSpriteSet("white");
+        testEntityA.setHitboxType(Entity.HitboxType.CIRCLE);
+
+        testEntityB = new MovingEntity(game);
+        testEntityB.setPosition(new Vector2D(100,100));
+        testEntityB.setSize(new Dimension(40,40));
+        testEntityB.setFriction(0.75);
+        testEntityB.setMaxVelocity(new Vector2D(12,12));
+        testEntityB.setHitboxType(Entity.HitboxType.CIRCLE);
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
 
     public void tick() {
         super.tick();
-        testEntity.tick();
+        testEntityA.tick();
+        testEntityB.tick();
     }
 
     private int x;
@@ -51,26 +61,18 @@ public class GameController extends Controller {
             game.setController("MENU");
         }
 
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_E)) {
-            testEntity.setActiveSpriteSet("green");
-        }
+        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntityA.accelerateX(-2.0); }
+        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { testEntityA.accelerateX(2.0); }
+        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { testEntityA.accelerateY(-2.0); }
+        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { testEntityA.accelerateY(2.0); }
 
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_R)) {
-            testEntity.setActiveSpriteSet("red");
+        if(testEntityA.hasCollision(testEntityB)) {
+            testEntityA.hitboxColor = Color.YELLOW;
+            testEntityB.hitboxColor = Color.YELLOW;
+        } else {
+            testEntityA.hitboxColor = Color.BLUE;
+            testEntityB.hitboxColor = Color.BLUE;
         }
-
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_T)) {
-            testEntity.setActiveSpriteSet("violet");
-        }
-
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_Y)) {
-            testEntity.setActiveSpriteSet("white");
-        }
-
-        if(keyInput.isKeyDown(KeyEvent.VK_LEFT)) { testEntity.accelerateX(-2.0); }
-        if(keyInput.isKeyDown(KeyEvent.VK_RIGHT)) { testEntity.accelerateX(2.0); }
-        if(keyInput.isKeyDown(KeyEvent.VK_UP)) { testEntity.accelerateY(-2.0); }
-        if(keyInput.isKeyDown(KeyEvent.VK_DOWN)) { testEntity.accelerateY(2.0); }
 
         if(keyInput.isKeyDownAndRelease(KeyEvent.VK_L)) {
             audio.playClip(game.getSFX("shoot"));
@@ -84,7 +86,8 @@ public class GameController extends Controller {
             canvas.drawImage(spriteSet.getSprite(), x, y, graphics);
         }
 
-        testEntity.Draw(canvas);
+        testEntityA.Draw(canvas);
+        testEntityB.Draw(canvas);
 
         game.drawDevData(canvas);
         graphics.renderCanvas();
