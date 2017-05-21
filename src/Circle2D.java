@@ -22,7 +22,7 @@ public class Circle2D {
     public void setX(double x) { this.x = x; }
     public void setY(double y) { this.y = y; }
     public void setRadius(double radius) { this.radius = radius; }
-    public void setVector(double x, double y, double radius) { this.x = x; this.y = y; this.radius = radius; }
+    public void setCircle(double x, double y, double radius) { this.x = x; this.y = y; this.radius = radius; }
 
     public boolean intersects(Circle2D circleB) {
         Circle2D circleA = this;
