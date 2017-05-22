@@ -1,3 +1,4 @@
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 /**
@@ -60,7 +61,7 @@ public class MovingEntity extends Entity {
         setAccelerationY( getAccelerationY() + constant );
     }
 
-    public void updateMovement(ArrayList<Entity> tiles) {
+    public void updateMovement() {
         double velocityX = (getCurrentVelocityX() + getAccelerationX()) * friction;
         double velocityY = (getCurrentVelocityY() + getAccelerationY()) * friction;
         double positionX = getPositionX();
@@ -90,35 +91,6 @@ public class MovingEntity extends Entity {
         setPositionX( newPositionX );
         setPositionY( newPositionY );
         setAcceleration(new Vector2D(0,0));
-
-        // Tile collision
-        for(Entity tile: tiles) {
-            if (this.hasCollision(tile)) {
-                double thisCenterX = getPositionX() + (getSize().getWidth() / 2);
-                double tileCenterX = tile.getPositionX() + (tile.getSize().getWidth() / 2);
-                double deltaX = thisCenterX - tileCenterX;
-
-                double thisCenterY = getPositionY() + (getSize().getHeight() / 2);
-                double tileCenterY = tile.getPositionY() + (tile.getSize().getHeight() / 2);
-                double deltaY = thisCenterY - tileCenterY;
-
-                if(Math.abs(deltaX) > Math.abs(deltaY)) {
-                    if (deltaX < 0) {
-                        setPositionX(tile.getPositionX() - getSize().getWidth());
-                    } else {
-                        setPositionX(tile.getPositionX() + tile.getSize().getWidth() + 1);
-                    }
-                    setCurrentVelocityX(0);
-                } else {
-                    if (deltaY < 0) {
-                        setPositionY(tile.getPositionY() - getSize().getHeight());
-                    } else {
-                        setPositionY(tile.getPositionY() + tile.getSize().getHeight() + 1);
-                    }
-                    setCurrentVelocityY(0);
-                }
-            }
-        }
     }
 
     public void tick() {

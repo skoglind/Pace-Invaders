@@ -53,7 +53,7 @@ public class Entity {
     public void setPositionX(double x) { position.setVector(x, getPositionY()); }
     public void setPositionY(double y) { position.setVector(getPositionX(), y); }
 
-    public void setSize(Dimension size) { this.size = size; }
+    public void setSize(Dimension size) { this.size = new Dimension((int)size.getWidth()-1, (int)size.getHeight()-1); }
 
     public void setActiveSpriteSet(String name) {
         if(spriteSets.containsKey(name)) {

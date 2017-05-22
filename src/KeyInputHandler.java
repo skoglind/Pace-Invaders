@@ -96,6 +96,16 @@ public class KeyInputHandler implements KeyListener {
     }
 
     /**
+     * Release key
+     * @param keyCode           Keycode (eg. KeyEvent.VK_SPACE)
+     */
+    public void releaseKey(int keyCode) {
+        if(keys.containsKey(keyCode)) {
+            keys.get(keyCode).releaseKey();
+        }
+    }
+
+    /**
      * Returns for how long the key has been pressed
      * @param keyCode           Keycode (eg. KeyEvent.VK_SPACE)
      * @return                  Int

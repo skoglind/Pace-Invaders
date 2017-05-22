@@ -39,7 +39,42 @@ public class GameController extends Controller {
         tiles.add(entity);
 
         entity = new Entity(game);
-        entity.setPosition(new Vector2D(151, 100));
+        entity.setPosition(new Vector2D(150, 100));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        tiles.add(entity);
+
+        entity = new Entity(game);
+        entity.setPosition(new Vector2D(100, 150));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        tiles.add(entity);
+
+        entity = new Entity(game);
+        entity.setPosition(new Vector2D(150, 150));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        tiles.add(entity);
+
+        entity = new Entity(game);
+        entity.setPosition(new Vector2D(200, 150));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        tiles.add(entity);
+
+        entity = new Entity(game);
+        entity.setPosition(new Vector2D(250, 150));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        tiles.add(entity);
+
+        entity = new Entity(game);
+        entity.setPosition(new Vector2D(300, 150));
         entity.setSize(new Dimension(50, 50));
         entity.setEntityType(Entity.EntityType.OPAQUE);
         entity.setHitboxType(Entity.HitboxType.RECTANGLE);
