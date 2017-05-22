@@ -19,7 +19,7 @@ public class Player extends MovingEntity {
         setFriction(0.75);
         setMaxVelocity(new Vector2D(15,15));
         setEntityType(Entity.EntityType.PLAYER);
-        setHitboxType(Entity.HitboxType.CIRCLE);
+        setHitboxType(Entity.HitboxType.RECTANGLE);
 
         addSpriteSet(game.getSpriteSheet("player_green"), "green", 20, 20, 5, 2);
         addSpriteSet(game.getSpriteSheet("player_red"), "red", 20, 20, 5, 1);

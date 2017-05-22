@@ -36,7 +36,13 @@ public class GameController extends Controller {
         entity.setSize(new Dimension(50, 50));
         entity.setEntityType(Entity.EntityType.OPAQUE);
         entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        tiles.add(entity);
 
+        entity = new Entity(game);
+        entity.setPosition(new Vector2D(151, 100));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
         tiles.add(entity);
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
@@ -59,15 +65,6 @@ public class GameController extends Controller {
 
         player.updateMovement(tiles);
 
-        /*Iterator<Entity> itTiles = tiles.iterator();
-        while(itTiles.hasNext()) {
-            Entity tile = itTiles.next();
-            if (player.hasCollision(tile)) {
-                player.stopMovement(MovingEntity.MovementDirection.DOWN);
-                //itTiles.remove();
-            }
-        }*/
-
         // Calculate entities
         int numEntities = 1 + tiles.size();
         game.setNumEntities(numEntities);
@@ -75,7 +72,6 @@ public class GameController extends Controller {
 
     public void render() {
         Graphics2D canvas = graphics.getCanvas(Game.BACKGROUND_COLOR);
-
 
         for(Entity tile: tiles) {
             tile.Draw(canvas);

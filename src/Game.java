@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.HashMap;
 
@@ -157,7 +158,7 @@ public class Game {
 
             this.stopFrameTimer();
 
-            try { Thread.sleep(this.getFrameSleepTime()); } catch (Exception e) {}
+            try { Thread.sleep(this.getFrameSleepTime()); } catch (Exception e) { }
         }
     }
 

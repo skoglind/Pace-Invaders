@@ -60,7 +60,7 @@ public class MovingEntity extends Entity {
         setAccelerationY( getAccelerationY() + constant );
     }
 
-    public void updateMovement(ArrayList<Entity> collidables) {
+    public void updateMovement(ArrayList<Entity> tiles) {
         double velocityX = (getCurrentVelocityX() + getAccelerationX()) * friction;
         double velocityY = (getCurrentVelocityY() + getAccelerationY()) * friction;
         double positionX = getPositionX();
@@ -84,46 +84,41 @@ public class MovingEntity extends Entity {
         newPositionX = positionX + velocityX;
         newPositionY = positionY + velocityY;
 
-        // Hinder future movement
-        for(Entity collidable: collidables) {
-            if (this.hasCollision(collidable)) {
-
-
-                if(newPositionX > positionX) {
-                    System.out.println(newPositionX + "--" + positionX);
-                    newPositionX = collidable.getPositionX() - getSize().getWidth() - 1;
-                    System.out.println(newPositionX + "--" + positionX);
-                    System.out.println("SEND LEFT");
-                } else if(newPositionX < positionX) {
-                    System.out.println(newPositionX + "--" + positionX);
-                    newPositionX = collidable.getPositionX() + collidable.getSize().getWidth() + 1;
-                    System.out.println(newPositionX + "--" + positionX);
-                    System.out.println("SEND RIGHT");
-                } else if(newPositionY > positionY) {
-                    System.out.println(newPositionY + "--" + positionY);
-                    newPositionY = collidable.getPositionY() - getSize().getHeight() - 1;
-                    System.out.println(newPositionY + "--" + positionY);
-                    System.out.println("SEND UP");
-                } else if(newPositionY < positionY) {
-                    System.out.println(newPositionY + "--" + positionY);
-                    newPositionY = collidable.getPositionY() + collidable.getSize().getHeight() + 1;
-                    System.out.println(newPositionY + "--" + positionY);
-                    System.out.println("SEND DOWN");
-                }
-
-                System.out.println("---");
-
-                velocityX = 0;
-                velocityY = 0;
-            }
-        }
-
         // Set values to object
         setCurrentVelocityX( velocityX );
         setCurrentVelocityY( velocityY );
         setPositionX( newPositionX );
         setPositionY( newPositionY );
         setAcceleration(new Vector2D(0,0));
+
+        // Tile collision
+        for(Entity tile: tiles) {
+            if (this.hasCollision(tile)) {
+                double thisCenterX = getPositionX() + (getSize().getWidth() / 2);
+                double tileCenterX = tile.getPositionX() + (tile.getSize().getWidth() / 2);
+                double deltaX = thisCenterX - tileCenterX;
+
+                double thisCenterY = getPositionY() + (getSize().getHeight() / 2);
+                double tileCenterY = tile.getPositionY() + (tile.getSize().getHeight() / 2);
+                double deltaY = thisCenterY - tileCenterY;
+
+                if(Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX < 0) {
+                        setPositionX(tile.getPositionX() - getSize().getWidth());
+                    } else {
+                        setPositionX(tile.getPositionX() + tile.getSize().getWidth() + 1);
+                    }
+                    setCurrentVelocityX(0);
+                } else {
+                    if (deltaY < 0) {
+                        setPositionY(tile.getPositionY() - getSize().getHeight());
+                    } else {
+                        setPositionY(tile.getPositionY() + tile.getSize().getHeight() + 1);
+                    }
+                    setCurrentVelocityY(0);
+                }
+            }
+        }
     }
 
     public void tick() {
