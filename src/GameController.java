@@ -30,19 +30,14 @@ public class GameController extends Controller {
         player = new Player(game);
         player.setPosition(new Vector2D(50, 50));
 
-        int tileSize = 5;
         tiles = new ArrayList<>();
-        for(int x = 0; x < game.SCREEN_WIDTH/tileSize; x++) {
-            for(int y = 0; y < game.SCREEN_HEIGHT/tileSize; y++) {
-                Entity entity = new Entity(game);
-                entity.setPosition(new Vector2D(x * (tileSize+1), y * (tileSize+1)));
-                entity.setSize(new Dimension(tileSize, tileSize));
-                entity.setEntityType(Entity.EntityType.OPAQUE);
-                entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+        Entity entity = new Entity(game);
+        entity.setPosition(new Vector2D(100, 100));
+        entity.setSize(new Dimension(50, 50));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
 
-                tiles.add(entity);
-            }
-        }
+        tiles.add(entity);
 
         backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
@@ -62,14 +57,16 @@ public class GameController extends Controller {
             game.setController("MENU");
         }
 
-        Iterator<Entity> itTiles = tiles.iterator();
+        player.updateMovement(tiles);
+
+        /*Iterator<Entity> itTiles = tiles.iterator();
         while(itTiles.hasNext()) {
             Entity tile = itTiles.next();
             if (player.hasCollision(tile)) {
                 player.stopMovement(MovingEntity.MovementDirection.DOWN);
                 //itTiles.remove();
             }
-        }
+        }*/
 
         // Calculate entities
         int numEntities = 1 + tiles.size();

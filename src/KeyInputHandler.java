@@ -63,6 +63,8 @@ public class KeyInputHandler implements KeyListener {
      * - Add to game ticker to count presstime
      */
     public void tick() {
+        // ConcurrentModificationException
+
         for (HashMap.Entry<Integer, Key> entry : keys.entrySet()) {
             Integer keyCode = entry.getKey();
             keys.get(keyCode).tick();

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * MovingEntity Class
  * - Moving Entities
@@ -8,10 +10,6 @@ public class MovingEntity extends Entity {
     private Vector2D currentVelocity;
     private Vector2D acceleration;
     private double friction;
-
-    public enum MovementDirection {
-        LEFT, RIGHT, UP, DOWN, NOTHING
-    }
 
     // GETTERS
     public Vector2D getMaxVelocity() { return maxVelocity; }
@@ -27,26 +25,6 @@ public class MovingEntity extends Entity {
     public double getAccelerationY() { return acceleration.getY(); }
 
     public double getFriction() { return friction; }
-
-    public MovementDirection getDirectionX() {
-        if(getCurrentVelocityX() > 0) {
-            return MovementDirection.RIGHT;
-        } else if(getCurrentVelocityX() < 0) {
-            return MovementDirection.LEFT;
-        } else {
-            return MovementDirection.NOTHING;
-        }
-    }
-
-    public MovementDirection getDirectionY() {
-        if(getCurrentVelocityY() > 0) {
-            return MovementDirection.DOWN;
-        } else if(getCurrentVelocityY() < 0) {
-            return MovementDirection.UP;
-        } else {
-            return MovementDirection.NOTHING;
-        }
-    }
 
     // SETTERS
     public void setMaxVelocity(Vector2D velocity) { this.maxVelocity = velocity; }
@@ -82,33 +60,7 @@ public class MovingEntity extends Entity {
         setAccelerationY( getAccelerationY() + constant );
     }
 
-    public void stopMovement() {
-        setCurrentVelocity(new Vector2D(0, 0));
-        setAcceleration(new Vector2D(0, 0));
-    }
-
-    public void stopMovement(MovementDirection direction) {
-        MovementDirection currentDirectionX = getDirectionX();
-        MovementDirection currentDirectionY = getDirectionY();
-
-        switch(direction) {
-            case LEFT:
-                if(currentDirectionX == MovementDirection.LEFT) { setCurrentVelocityX(0); setAccelerationX(0); }
-                break;
-            case RIGHT:
-                if(currentDirectionX == MovementDirection.RIGHT) { setCurrentVelocityX(0); setAccelerationX(0); }
-                break;
-            case UP:
-                if(currentDirectionY == MovementDirection.UP) { setCurrentVelocityY(0); setAccelerationY(0); }
-                break;
-            case DOWN:
-                if(currentDirectionY == MovementDirection.DOWN) { setCurrentVelocityY(0); setAccelerationY(0); }
-
-                break;
-        }
-    }
-
-    public void updateMovement() {
+    public void updateMovement(ArrayList<Entity> collidables) {
         double velocityX = (getCurrentVelocityX() + getAccelerationX()) * friction;
         double velocityY = (getCurrentVelocityY() + getAccelerationY()) * friction;
         double positionX = getPositionX();
@@ -132,6 +84,40 @@ public class MovingEntity extends Entity {
         newPositionX = positionX + velocityX;
         newPositionY = positionY + velocityY;
 
+        // Hinder future movement
+        for(Entity collidable: collidables) {
+            if (this.hasCollision(collidable)) {
+
+
+                if(newPositionX > positionX) {
+                    System.out.println(newPositionX + "--" + positionX);
+                    newPositionX = collidable.getPositionX() - getSize().getWidth() - 1;
+                    System.out.println(newPositionX + "--" + positionX);
+                    System.out.println("SEND LEFT");
+                } else if(newPositionX < positionX) {
+                    System.out.println(newPositionX + "--" + positionX);
+                    newPositionX = collidable.getPositionX() + collidable.getSize().getWidth() + 1;
+                    System.out.println(newPositionX + "--" + positionX);
+                    System.out.println("SEND RIGHT");
+                } else if(newPositionY > positionY) {
+                    System.out.println(newPositionY + "--" + positionY);
+                    newPositionY = collidable.getPositionY() - getSize().getHeight() - 1;
+                    System.out.println(newPositionY + "--" + positionY);
+                    System.out.println("SEND UP");
+                } else if(newPositionY < positionY) {
+                    System.out.println(newPositionY + "--" + positionY);
+                    newPositionY = collidable.getPositionY() + collidable.getSize().getHeight() + 1;
+                    System.out.println(newPositionY + "--" + positionY);
+                    System.out.println("SEND DOWN");
+                }
+
+                System.out.println("---");
+
+                velocityX = 0;
+                velocityY = 0;
+            }
+        }
+
         // Set values to object
         setCurrentVelocityX( velocityX );
         setCurrentVelocityY( velocityY );
@@ -142,6 +128,5 @@ public class MovingEntity extends Entity {
 
     public void tick() {
         super.tick();
-        this.updateMovement();
     }
 }
