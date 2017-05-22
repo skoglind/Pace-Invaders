@@ -33,6 +33,7 @@ public class Game {
     private HashMap<String, SpriteSheet> spriteSheets;
     private int currentFPS = 0;
     private int lastFrameTime = 0;
+    private int numEntities = 0;
 
     // GETTERS
     public GraphicsHandler getGraphicsHandler() {  return graphics; }
@@ -40,6 +41,7 @@ public class Game {
     public KeyInputHandler getKeyInputHandler() {  return keyInput; }
     public MouseInputHandler getMouseInputHandler() {  return mouseInput; }
     public int getCurrentFPS() { return currentFPS; }
+    public int getNumEntities() { return numEntities; }
     public String getSFX(String name) {
         if(availableSFX.containsKey(name)) { return availableSFX.get(name); }
         return null;
@@ -59,6 +61,7 @@ public class Game {
         controllerManager.setActiveController(identifier);
     }
     public void loadData() { loadSpriteSheets(); loadMusic(); loadSFX(); loadFonts(); }
+    public void setNumEntities(int numEntities) { this.numEntities = numEntities; }
 
     /**
      * Main-method
@@ -186,11 +189,12 @@ public class Game {
 
         // Draw background
         canvas.setColor(backgroundColor);
-        canvas.fillRect(2, 2, 60, 30);
+        canvas.fillRect(2, 2, 110, 40);
 
         // Draw data
         canvas.setColor(textColor);
         canvas.drawString( "FPS: " + getCurrentFPS(), 10, 20);
+        canvas.drawString( "Entities: " + getNumEntities(), 10, 34);
     }
 
     /**

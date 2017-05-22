@@ -17,7 +17,7 @@ public class Player extends MovingEntity {
 
         setSize(new Dimension(20,20));
         setFriction(0.75);
-        setMaxVelocity(new Vector2D(12,12));
+        setMaxVelocity(new Vector2D(15,15));
         setEntityType(Entity.EntityType.PLAYER);
         setHitboxType(Entity.HitboxType.CIRCLE);
 
@@ -35,10 +35,10 @@ public class Player extends MovingEntity {
 
     private void updateInput() {
         KeyInputHandler keyInput = game.getKeyInputHandler();
-        if(keyInput.isKeyDown(keyLeft)) { this.accelerateX(-2.0); }
-        if(keyInput.isKeyDown(keyRight)) { this.accelerateX(2.0); }
-        if(keyInput.isKeyDown(keyUp)) { this.accelerateY(-2.0); }
-        if(keyInput.isKeyDown(keyDown)) { this.accelerateY(2.0); }
+        if(keyInput.isKeyDown(keyLeft)) { this.accelerateX(-2.5); }
+        if(keyInput.isKeyDown(keyRight)) { this.accelerateX(2.5); }
+        if(keyInput.isKeyDown(keyUp)) { this.accelerateY(-2.5); }
+        if(keyInput.isKeyDown(keyDown)) { this.accelerateY(2.5); }
 
         AudioHandler audio = game.getAudioHandler();
         if(keyInput.isKeyDownAndRelease(keyFire)) {
