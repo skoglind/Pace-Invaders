@@ -3,7 +3,6 @@ import javafx.scene.media.AudioClip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * GameController
@@ -28,59 +27,42 @@ public class GameController extends Controller {
 
     public void init() {
         player = new Player(game);
-        player.setPosition(new Vector2D(50, 50));
+        player.setPosition(new Vector2D(150, 150));
 
         tiles = new ArrayList<>();
-        Entity entity = new Entity(game);
-        entity.setPosition(new Vector2D(100, 100));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
+        for(int i = 0; i < 20; i++) {
+            Entity entity = new Entity(game);
+            entity.setPosition(new Vector2D(20+20*i, 100));
+            entity.setSize(new Dimension(20, 20));
+            entity.setEntityType(Entity.EntityType.OPAQUE);
+            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+            tiles.add(entity);
 
-        entity = new Entity(game);
-        entity.setPosition(new Vector2D(150, 100));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
+            entity = new Entity(game);
+            entity.setPosition(new Vector2D(20+20*i, 240));
+            entity.setSize(new Dimension(20, 20));
+            entity.setEntityType(Entity.EntityType.OPAQUE);
+            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+            tiles.add(entity);
+        }
 
-        entity = new Entity(game);
-        entity.setPosition(new Vector2D(100, 150));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
+        for(int i = 0; i < 8; i++) {
+            Entity entity = new Entity(game);
+            entity.setPosition(new Vector2D(20, 100+i*20));
+            entity.setSize(new Dimension(20, 20));
+            entity.setEntityType(Entity.EntityType.OPAQUE);
+            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+            tiles.add(entity);
 
-        entity = new Entity(game);
-        entity.setPosition(new Vector2D(150, 150));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
+            entity = new Entity(game);
+            entity.setPosition(new Vector2D(420, 100+i*20));
+            entity.setSize(new Dimension(20, 20));
+            entity.setEntityType(Entity.EntityType.OPAQUE);
+            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
+            tiles.add(entity);
+        }
 
-        entity = new Entity(game);
-        entity.setPosition(new Vector2D(200, 150));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
-
-        entity = new Entity(game);
-        entity.setPosition(new Vector2D(250, 150));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
-
-        entity = new Entity(game);
-        entity.setPosition(new Vector2D(300, 150));
-        entity.setSize(new Dimension(50, 50));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        entity.setHitboxType(Entity.HitboxType.RECTANGLE);
-        tiles.add(entity);
-
-        backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
+        //backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
 
     public void tick() {

@@ -29,6 +29,24 @@ public class Player extends MovingEntity {
         setActiveSpriteSet("white");*/
     }
 
+    public Rectangle getHitboxX() {
+        return new Rectangle((int)getPositionX(), (int)(getPositionY() + getMaxVelocityY()/2), (int)getSize().getWidth(), (int)(getSize().getHeight() - getMaxVelocityY()));
+    }
+
+    public Rectangle getHitboxY() {
+        return new Rectangle((int)(getPositionX() + getMaxVelocityX()/2), (int)getPositionY(), (int)(getSize().getWidth() - getMaxVelocityX()), (int)getSize().getHeight());
+    }
+
+    public void Draw(Graphics2D canvas) {
+        super.Draw(canvas);
+
+        canvas.setColor(Color.ORANGE);
+        canvas.drawRect((int)getHitboxX().getX(), (int)getHitboxX().getY(), (int)getHitboxX().getWidth(), (int)getHitboxX().getHeight());
+
+        canvas.setColor(Color.ORANGE);
+        canvas.drawRect((int)getHitboxY().getX(), (int)getHitboxY().getY(), (int)getHitboxY().getWidth(), (int)getHitboxY().getHeight());
+    }
+
     public void tick() {
         super.tick();
         this.updateInput();
@@ -49,40 +67,54 @@ public class Player extends MovingEntity {
 
     public void updateMovement(ArrayList<Entity> tiles) {
         super.updateMovement();
+        double newPositionX = getPositionX();
+        double newPositionY = getPositionY();
 
-        // Tile collision
         for(Entity tile: tiles) {
-            if(this.hasCollision(tile)) {
-                double newPositionX = getPositionX();
-                double newPositionY = getPositionY();
+            tile.hitboxColor = Color.BLUE;
+        }
 
+        // X - Collision check
+        for(Entity tile: tiles) {
+            Rectangle hitbox = this.getHitboxX();
+
+            if(hitbox.intersects(tile.getHitboxRectangle())) {
                 double thisCenterX = getPositionX() + (getSize().getWidth() / 2);
                 double tileCenterX = tile.getPositionX() + (tile.getSize().getWidth() / 2);
                 double deltaX = thisCenterX - tileCenterX;
 
+                if (deltaX < 0) {
+                    newPositionX = tile.getPositionX() - getSize().getWidth();
+                } else {
+                    newPositionX = tile.getPositionX() + tile.getSize().getWidth() + 1;
+                }
+
+                setCurrentVelocityX(0);
+                tile.hitboxColor = Color.YELLOW;
+            }
+        }
+
+        // Y - Collision check
+        for(Entity tile: tiles) {
+            Rectangle hitbox = this.getHitboxY();
+
+            if(hitbox.intersects(tile.getHitboxRectangle())) {
                 double thisCenterY = getPositionY() + (getSize().getHeight() / 2);
                 double tileCenterY = tile.getPositionY() + (tile.getSize().getHeight() / 2);
                 double deltaY = thisCenterY - tileCenterY;
 
-                if(Math.abs(deltaX) > Math.abs(deltaY)) {
-                    if (deltaX < 0) {
-                        newPositionX = tile.getPositionX() - getSize().getWidth();
-                    } else {
-                        newPositionX = tile.getPositionX() + tile.getSize().getWidth() + 1;
-                    }
-                    setCurrentVelocityX(0);
+                if (deltaY < 0) {
+                    newPositionY = tile.getPositionY() - getSize().getHeight();
                 } else {
-                    if (deltaY < 0) {
-                        newPositionY = tile.getPositionY() - getSize().getHeight();
-                    } else {
-                        newPositionY = tile.getPositionY() + tile.getSize().getHeight() + 1;
-                    }
-                    setCurrentVelocityY(0);
+                    newPositionY = tile.getPositionY() + tile.getSize().getHeight() + 1;
                 }
 
-                setPositionX(newPositionX);
-                setPositionY(newPositionY);
+                setCurrentVelocityY(0);
+                tile.hitboxColor = Color.YELLOW;
             }
         }
+
+        setPositionX(newPositionX);
+        setPositionY(newPositionY);
     }
 }

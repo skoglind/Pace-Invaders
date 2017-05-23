@@ -38,6 +38,7 @@ public class Entity {
     public double getPositionY() { return position.getY(); }
 
     public Dimension getSize() { return size; }
+    public Dimension getRealSize() { return new Dimension((int)size.getWidth()+1, (int)size.getHeight()+1); }
 
     public String getActiveSpriteSet() { return this.activeSpriteSet; }
 
