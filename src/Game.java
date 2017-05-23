@@ -34,18 +34,13 @@ public class Game {
     private HashMap<String, SpriteSheet> spriteSheets;
     private int currentFPS = 0;
     private int lastFrameTime = 0;
-    private int numEntities = 0;
-
-    public int numXHits = 0;
-    public int numYHits = 0;
+    private HashMap<String, Integer> devData;
 
     // GETTERS
     public GraphicsHandler getGraphicsHandler() {  return graphics; }
     public AudioHandler getAudioHandler() {  return audio; }
     public KeyInputHandler getKeyInputHandler() {  return keyInput; }
     public MouseInputHandler getMouseInputHandler() {  return mouseInput; }
-    public int getCurrentFPS() { return currentFPS; }
-    public int getNumEntities() { return numEntities; }
     public String getSFX(String name) {
         if(availableSFX.containsKey(name)) { return availableSFX.get(name); }
         return null;
@@ -65,7 +60,7 @@ public class Game {
         controllerManager.setActiveController(identifier);
     }
     public void loadData() { loadSpriteSheets(); loadMusic(); loadSFX(); loadFonts(); }
-    public void setNumEntities(int numEntities) { this.numEntities = numEntities; }
+    public void setDevData(String title, int data) { devData.put(title, data); }
 
     /**
      * Main-method
@@ -94,6 +89,7 @@ public class Game {
         controllerManager.addController("MENU", new MenuController(this));
 
         // Load gamedata
+        devData = new HashMap<>();
         loadData();
 
         // Set Active Controller
@@ -191,14 +187,20 @@ public class Game {
         Color textColor = Color.BLACK;
         Color backgroundColor = Color.WHITE;
 
+        int textStart = 20;
+        int offsetText = 15;
+        int i = 0;
+
         // Draw background
         canvas.setColor(backgroundColor);
-        canvas.fillRect(2, 2, 110, 40);
+        canvas.fillRect(2, 2, 120, 14+devData.size()*15);
 
         // Draw data
         canvas.setColor(textColor);
-        canvas.drawString( "FPS: " + getCurrentFPS(), 10, 20);
-        canvas.drawString( "Entities: " + getNumEntities(), 10, 34);
+        for (HashMap.Entry<String, Integer> data : devData.entrySet()) {
+            canvas.drawString( data.getKey() + ": " + data.getValue(), 10, textStart+i*offsetText);
+            i++;
+        }
     }
 
     /**
@@ -259,7 +261,7 @@ public class Game {
 
         private int getFrameSleepTime() {
             if(this.msElapsed >= 1000) {
-                this.currentFPS = this.frameCount;
+                this.devData.put("FPS", this.frameCount);
                 this.frameCount = 0;
                 this.msElapsed = 0;
             }

@@ -1,6 +1,3 @@
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-
 /**
  * MovingEntity Class
  * - Moving Entities
@@ -11,6 +8,14 @@ public class MovingEntity extends Entity {
     private Vector2D currentVelocity;
     private Vector2D acceleration;
     private double friction;
+
+    public enum MovingDirectionX {
+        LEFT, RIGHT, NONE
+    }
+
+    public enum MovingDirectionY {
+        UP, DOWN, NONE
+    }
 
     // GETTERS
     public Vector2D getMaxVelocity() { return maxVelocity; }
@@ -91,6 +96,26 @@ public class MovingEntity extends Entity {
         setPositionX( newPositionX );
         setPositionY( newPositionY );
         setAcceleration(new Vector2D(0,0));
+    }
+
+    public void move(MovingDirectionX directionX, MovingDirectionY directionY) {
+        switch(directionX) {
+            case LEFT:
+                setPositionX( getPositionX() - getMaxVelocityX() );
+                break;
+            case RIGHT:
+                setPositionX( getPositionX() + getMaxVelocityX() );
+                break;
+        }
+
+        switch(directionY) {
+            case UP:
+                setPositionY( getPositionY() - getMaxVelocityY() );
+                break;
+            case DOWN:
+                setPositionY( getPositionY() + getMaxVelocityY() );
+                break;
+        }
     }
 
     public void tick() {

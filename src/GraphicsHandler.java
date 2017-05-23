@@ -29,6 +29,7 @@ public class GraphicsHandler extends JFrame {
         setResizable(false);
         getContentPane().setBackground(Color.BLACK);
         setVisible(true);
+        setSize(new Dimension((int)frameSize.getWidth() + getInsets().left, (int)frameSize.getHeight() + getInsets().top));
 
         // CANVAS
         canvas = new BufferedImage(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);

@@ -10,91 +10,71 @@ import java.util.ArrayList;
  */
 public class GameController extends Controller {
     // ENTITIES
-    Player player;
-    ArrayList<Entity> tiles;
+    private Player player;
+    private ArrayList<Level> levels;
 
-    // MUSIC & SFX
-    AudioClip backgroundMusic;
+    // STATUS
+    private Level activeLevel;
+    private int levelID;
 
     public GameController(Game game) {
         super(game);
     }
 
     public void dispose() {
-        if(backgroundMusic.isPlaying()) { backgroundMusic.stop(); }
-        backgroundMusic = null;
+        activeLevel.dispose();
+        levels = null;
+        player = null;
     }
 
     public void init() {
+        levels = new ArrayList<>();
+
         player = new Player(game);
-        player.setPosition(new Vector2D(150, 150));
+        player.setPosition(new Vector2D(game.SCREEN_WIDTH/2 - player.getSize().getWidth()/2, game.SCREEN_HEIGHT - player.getSize().getHeight()));
+        levelID = 0;
 
-        tiles = new ArrayList<>();
-        for(int i = 0; i < 20; i++) {
-            Entity entity = new Entity(game);
-            entity.setPosition(new Vector2D(20+20*i, 100));
-            entity.setSize(new Dimension(20, 20));
-            entity.setEntityType(Entity.EntityType.OPAQUE);
-            tiles.add(entity);
+        Level level1 = new Level(this, "level1.lvl");
+        levels.add(level1);
 
-            entity = new Entity(game);
-            entity.setPosition(new Vector2D(20+20*i, 240));
-            entity.setSize(new Dimension(20, 20));
-            entity.setEntityType(Entity.EntityType.OPAQUE);
-            tiles.add(entity);
-        }
-
-        for(int i = 0; i < 8; i++) {
-            Entity entity = new Entity(game);
-            entity.setPosition(new Vector2D(20, 100+i*20));
-            entity.setSize(new Dimension(20, 20));
-            entity.setEntityType(Entity.EntityType.OPAQUE);
-            tiles.add(entity);
-
-            entity = new Entity(game);
-            entity.setPosition(new Vector2D(420, 100+i*20));
-            entity.setSize(new Dimension(20, 20));
-            entity.setEntityType(Entity.EntityType.OPAQUE);
-            tiles.add(entity);
-        }
-
-        Entity entity = new Entity(game);
-        entity.setPosition(new Vector2D(60, 120));
-        entity.setSize(new Dimension(20, 20));
-        entity.setEntityType(Entity.EntityType.OPAQUE);
-        tiles.add(entity);
-
-        //backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
+        activeLevel = levels.get(levelID);
+        activeLevel.init();
     }
 
     public void tick() {
         super.tick();
         player.tick();
-        for(Entity tile: tiles) {
-            tile.tick();
-        }
+        activeLevel.tick();
+
+        game.setDevData("Enemies", activeLevel.getEnemies().size());
+        game.setDevData("Tiles", activeLevel.getTiles().size());
+        game.setDevData("Enemy Shots", activeLevel.getEnemyShots().size());
+        game.setDevData("Player Shots", activeLevel.getPlayerShots().size());
     }
 
     public void update(double delta) {
         super.update(delta);
 
-        if(keyInput.isKeyDownAndRelease(KeyEvent.VK_ENTER)) {
-            game.setController("MENU");
-        }
+        player.updateMovement(activeLevel.getPlayerBoundaries(), activeLevel.getTiles());
 
-        player.updateMovement(tiles);
+        // Calculate data
+        /*int numTiles = 0;
+        if(activeLevel.getTiles() != null) { numTiles += activeLevel.getTiles().size(); }
+        game.setNumTiles(numTiles);
 
-        // Calculate entities
-        int numEntities = 1 + tiles.size();
-        game.setNumEntities(numEntities);
+        int numEnemies = 0;
+        if(activeLevel.getEnemies() != null) { numEnemies += activeLevel.getEnemies().size(); }
+        game.setNumEnemies(numEnemies);
+
+        int numEnemyShots = 0;
+        if(activeLevel.getEnemyShots() != null) { numEnemyShots += activeLevel.getEnemyShots().size(); }
+        game.setNumEnemyShots(numEnemyShots);*/
     }
 
     public void render() {
         Graphics2D canvas = graphics.getCanvas(Game.BACKGROUND_COLOR);
 
-        for(Entity tile: tiles) {
-            tile.Draw(canvas);
-        }
+        activeLevel.Draw(canvas);
         player.Draw(canvas);
 
         game.drawDevData(canvas);

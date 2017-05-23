@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class Player extends MovingEntity {
     private static final double ACCELERATE_SPEED = 3.0;
     private static final double MAX_SPEED = 20.0;
-    private static final int HITBOXSIZE = 40;
     private static final double FRICTION = 0.80;
+    private static final Dimension HITBOXSIZE = new Dimension(40,40);
 
     private int keyUp = KeyEvent.VK_UP;
     private int keyDown = KeyEvent.VK_DOWN;
@@ -21,7 +21,7 @@ public class Player extends MovingEntity {
     public Player(Game game) {
         super(game);
 
-        setSize(new Dimension(HITBOXSIZE,HITBOXSIZE));
+        setSize(HITBOXSIZE);
         setFriction(FRICTION);
         setMaxVelocity(new Vector2D(MAX_SPEED,MAX_SPEED));
         setEntityType(Entity.EntityType.PLAYER);
@@ -105,50 +105,65 @@ public class Player extends MovingEntity {
         }
     }
 
-    public void updateMovement(ArrayList<Entity> tiles) {
+    public void updateMovement(Rectangle boundaries, ArrayList<Tile> tiles) {
         super.updateMovement();
         double newPositionX = getPositionX();
         double newPositionY = getPositionY();
 
-        for(Entity tile: tiles) {
-            tile.hitboxColor = Color.BLUE;
+        // X - Boundaries
+        if(this.getPositionX() < boundaries.getX()) {
+            newPositionX = boundaries.getX();
+        } else if(this.getPositionX()+this.getSize().getWidth() > boundaries.getX() + boundaries.getWidth()) {
+            newPositionX = boundaries.getX() + boundaries.getWidth() - this.getSize().getWidth();
         }
 
-        // X - Collision check
-        for(Entity tile: tiles) {
-            Rectangle hitbox = this.getHitboxX();
-            if(hitbox.intersects(tile.getHitbox())) {
-                double thisCenterX = getPositionX() + (getSize().getWidth() / 2);
-                double tileCenterX = tile.getPositionX() + (tile.getSize().getWidth() / 2);
-                double deltaX = thisCenterX - tileCenterX;
+        // Y - Boundaries
+        if(this.getPositionY() < boundaries.getY()) {
+            newPositionY = boundaries.getY();
+        } else if(this.getPositionY()+this.getSize().getHeight() > boundaries.getY() + boundaries.getHeight()) {
+            newPositionY = boundaries.getY() + boundaries.getHeight() - this.getSize().getHeight();
+        }
 
-                if (deltaX < 0) {
-                    newPositionX = tile.getPositionX() - getSize().getWidth();
-                } else {
-                    newPositionX = tile.getPositionX() + tile.getSize().getWidth() + 1;
+        // Collision check
+        if(tiles != null) {
+            // X - Collision check
+            for (Tile tile : tiles) {
+                if(tile.getEntityType() == EntityType.OPAQUE) {
+                    Rectangle hitbox = this.getHitboxX();
+                    if (hitbox.intersects(tile.getHitbox())) {
+                        double thisCenterX = getPositionX() + (getSize().getWidth() / 2);
+                        double tileCenterX = tile.getPositionX() + (tile.getSize().getWidth() / 2);
+                        double deltaX = thisCenterX - tileCenterX;
+
+                        if (deltaX < 0) {
+                            newPositionX = tile.getPositionX() - getSize().getWidth();
+                        } else {
+                            newPositionX = tile.getPositionX() + tile.getSize().getWidth() + 1;
+                        }
+
+                        setCurrentVelocityX(0);
+                    }
                 }
-
-                setCurrentVelocityX(0);
-                tile.hitboxColor = Color.YELLOW;
             }
-        }
 
-        // Y - Collision check
-        for (Entity tile : tiles) {
-            Rectangle hitbox = this.getHitboxY();
-            if (hitbox.intersects(tile.getHitbox())) {
-                double thisCenterY = getPositionY() + (getSize().getHeight() / 2);
-                double tileCenterY = tile.getPositionY() + (tile.getSize().getHeight() / 2);
-                double deltaY = thisCenterY - tileCenterY;
+            // Y - Collision check
+            for (Tile tile : tiles) {
+                if(tile.getEntityType() == EntityType.OPAQUE) {
+                    Rectangle hitbox = this.getHitboxY();
+                    if (hitbox.intersects(tile.getHitbox())) {
+                        double thisCenterY = getPositionY() + (getSize().getHeight() / 2);
+                        double tileCenterY = tile.getPositionY() + (tile.getSize().getHeight() / 2);
+                        double deltaY = thisCenterY - tileCenterY;
 
-                if (deltaY < 0) {
-                    newPositionY = tile.getPositionY() - getSize().getHeight();
-                } else {
-                    newPositionY = tile.getPositionY() + tile.getSize().getHeight() + 1;
+                        if (deltaY < 0) {
+                            newPositionY = tile.getPositionY() - getSize().getHeight();
+                        } else {
+                            newPositionY = tile.getPositionY() + tile.getSize().getHeight() + 1;
+                        }
+
+                        setCurrentVelocityY(0);
+                    }
                 }
-
-                setCurrentVelocityY(0);
-                tile.hitboxColor = Color.YELLOW;
             }
         }
 
