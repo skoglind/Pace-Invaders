@@ -16,12 +16,7 @@ public class Entity {
     private HashMap<String, SpriteSet> spriteSets;
     private String activeSpriteSet;
 
-    private HitboxType hitboxType;
     public Color hitboxColor = Color.BLUE;
-
-    public enum HitboxType {
-        CIRCLE, RECTANGLE
-    }
 
     private EntityType entityType;
     public enum EntityType {
@@ -42,9 +37,7 @@ public class Entity {
 
     public String getActiveSpriteSet() { return this.activeSpriteSet; }
 
-    public HitboxType getHitboxType() { return this.hitboxType; }
-    public Rectangle getHitboxRectangle() { return new Rectangle((int)position.getX(), (int)position.getY(), (int)size.getWidth(), (int)size.getHeight()); }
-    public Circle2D getHitboxCircle() { return new Circle2D((position.getX() + size.width/2), (position.getY() + size.height/2), size.width/2); }
+    public Rectangle getHitbox() { return new Rectangle((int)position.getX(), (int)position.getY(), (int)size.getWidth(), (int)size.getHeight()); }
 
     public EntityType getEntityType() { return this.entityType; }
 
@@ -63,8 +56,6 @@ public class Entity {
         }
     }
 
-    public void setHitboxType(HitboxType hitboxType) { this.hitboxType = hitboxType; }
-
     public void setEntityType(EntityType entityType) { this.entityType = entityType; }
 
     public Entity(Game game) {
@@ -74,7 +65,6 @@ public class Entity {
         this.position.setVector(0,0);
         this.size = new Dimension(0,0);
         this.activeSpriteSet = null;
-        this.hitboxType = HitboxType.RECTANGLE;
         this.entityType = EntityType.TRANSPARENT;
     }
 
@@ -89,14 +79,7 @@ public class Entity {
 
         if(game.showHitbox) {
             canvas.setColor(hitboxColor);
-            switch(hitboxType) {
-                case RECTANGLE:
-                    canvas.drawRect((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getHeight());
-                    break;
-                case CIRCLE:
-                    canvas.drawOval((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getWidth());
-                    break;
-            }
+            canvas.drawRect((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getHeight());
         }
     }
 
@@ -132,44 +115,5 @@ public class Entity {
                 activeSpriteSet = null;
             }
         }
-    }
-
-    public boolean hasCollision(Entity entityB) {
-        Entity entityA = this;
-
-        switch(entityA.hitboxType) {
-            case RECTANGLE:
-                switch(entityB.hitboxType) {
-                    case RECTANGLE:
-                        return entityA.getHitboxRectangle().intersects(entityB.getHitboxRectangle());
-                    case CIRCLE:
-                        return intersectRectCircle(entityB.getHitboxCircle(), entityA.getHitboxRectangle());
-                }
-                return false;
-            case CIRCLE:
-                switch(entityB.hitboxType) {
-                    case RECTANGLE:
-                        return intersectRectCircle(entityA.getHitboxCircle(), entityB.getHitboxRectangle());
-                    case CIRCLE:
-                        return entityA.getHitboxCircle().intersects(entityB.getHitboxCircle());
-                }
-                return false;
-        }
-        return false;
-    }
-
-    private boolean intersectRectCircle(Circle2D circle, Rectangle rect) {
-        double distanceX = Math.abs(circle.getX() - rect.getX() - (rect.getWidth()/2) );
-        double distanceY = Math.abs(circle.getY() - rect.getY() - (rect.getHeight()/2) );
-
-        if( distanceX > ((rect.getWidth()/2) + circle.getRadius()) ) { return false; }
-        if( distanceY > ((rect.getHeight()/2) + circle.getRadius()) ) { return false; }
-
-        if( distanceX <= (rect.getWidth()/2) ) { return true; }
-        if( distanceY <= (rect.getHeight()/2) ) { return true; }
-
-        double dx = distanceX - (rect.getWidth()/2);
-        double dy = distanceY - (rect.getHeight()/2);
-        return ( (dx*dx)+(dy*dy) <= (circle.getRadius()*circle.getRadius()));
     }
 }

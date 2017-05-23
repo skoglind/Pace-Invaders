@@ -35,14 +35,12 @@ public class GameController extends Controller {
             entity.setPosition(new Vector2D(20+20*i, 100));
             entity.setSize(new Dimension(20, 20));
             entity.setEntityType(Entity.EntityType.OPAQUE);
-            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
             tiles.add(entity);
 
             entity = new Entity(game);
             entity.setPosition(new Vector2D(20+20*i, 240));
             entity.setSize(new Dimension(20, 20));
             entity.setEntityType(Entity.EntityType.OPAQUE);
-            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
             tiles.add(entity);
         }
 
@@ -51,16 +49,20 @@ public class GameController extends Controller {
             entity.setPosition(new Vector2D(20, 100+i*20));
             entity.setSize(new Dimension(20, 20));
             entity.setEntityType(Entity.EntityType.OPAQUE);
-            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
             tiles.add(entity);
 
             entity = new Entity(game);
             entity.setPosition(new Vector2D(420, 100+i*20));
             entity.setSize(new Dimension(20, 20));
             entity.setEntityType(Entity.EntityType.OPAQUE);
-            entity.setHitboxType(Entity.HitboxType.RECTANGLE);
             tiles.add(entity);
         }
+
+        Entity entity = new Entity(game);
+        entity.setPosition(new Vector2D(60, 120));
+        entity.setSize(new Dimension(20, 20));
+        entity.setEntityType(Entity.EntityType.OPAQUE);
+        tiles.add(entity);
 
         //backgroundMusic = audio.playClip(game.getMusic("lasers_amsterdam"), 0.5, 0.0, AudioClip.INDEFINITE);
     }
