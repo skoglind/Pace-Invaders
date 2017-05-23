@@ -193,15 +193,12 @@ public class Game {
 
         // Draw background
         canvas.setColor(backgroundColor);
-        canvas.fillRect(2, 2, 110, 70);
+        canvas.fillRect(2, 2, 110, 40);
 
         // Draw data
         canvas.setColor(textColor);
         canvas.drawString( "FPS: " + getCurrentFPS(), 10, 20);
         canvas.drawString( "Entities: " + getNumEntities(), 10, 34);
-
-        canvas.drawString( "Hits X: " + numXHits, 10, 48);
-        canvas.drawString( "Hits Y: " + numYHits, 10, 62);
     }
 
     /**
