@@ -67,8 +67,8 @@ public class MovingEntity extends Entity {
     }
 
     public void updateMovement() {
-        double velocityX = (getCurrentVelocityX() + getAccelerationX()) * friction;
-        double velocityY = (getCurrentVelocityY() + getAccelerationY()) * friction;
+        double velocityX = getCurrentVelocityX() * friction + getAccelerationX();
+        double velocityY = getCurrentVelocityY() * friction + getAccelerationY();
         double positionX = getPositionX();
         double positionY = getPositionY();
         double newPositionX;
@@ -91,11 +91,12 @@ public class MovingEntity extends Entity {
         newPositionY = positionY + velocityY;
 
         // Set values to object
+        setAccelerationX( getAccelerationX() * friction );
+        setAccelerationY( getAccelerationY() * friction );
         setCurrentVelocityX( velocityX );
         setCurrentVelocityY( velocityY );
         setPositionX( newPositionX );
         setPositionY( newPositionY );
-        setAcceleration(new Vector2D(0,0));
     }
 
     public void move(MovingDirectionX directionX, MovingDirectionY directionY) {

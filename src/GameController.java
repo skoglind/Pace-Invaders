@@ -47,19 +47,6 @@ public class GameController extends Controller {
         super.update(delta);
 
         player.updateMovement(activeLevel.getPlayerBoundaries(), activeLevel.getTiles());
-
-        // Calculate data
-        /*int numTiles = 0;
-        if(activeLevel.getTiles() != null) { numTiles += activeLevel.getTiles().size(); }
-        game.setNumTiles(numTiles);
-
-        int numEnemies = 0;
-        if(activeLevel.getEnemies() != null) { numEnemies += activeLevel.getEnemies().size(); }
-        game.setNumEnemies(numEnemies);
-
-        int numEnemyShots = 0;
-        if(activeLevel.getEnemyShots() != null) { numEnemyShots += activeLevel.getEnemyShots().size(); }
-        game.setNumEnemyShots(numEnemyShots);*/
     }
 
     public void render() {

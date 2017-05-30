@@ -7,9 +7,9 @@ import java.util.ArrayList;
  * @author Fredrik Skoglind
  */
 public class Player extends MovingEntity {
-    private static final double ACCELERATE_SPEED = 3.0;
-    private static final double MAX_SPEED = 20.0;
-    private static final double FRICTION = 0.80;
+    private static final double ACCELERATE_SPEED = 0.4;
+    private static final double MAX_SPEED = 14.0;
+    private static final double FRICTION = 0.85;
     private static final Dimension HITBOXSIZE = new Dimension(40,40);
 
     private int keyUp = KeyEvent.VK_UP;
@@ -34,14 +34,14 @@ public class Player extends MovingEntity {
     }
 
     public Rectangle getHitboxX() {
-        int minOffset = (int)ACCELERATE_SPEED;
+        int minOffset = (int)ACCELERATE_SPEED + 2;
         int maxOffset = (int)getSize().getHeight() - 2;
 
-        int offset = (int)Math.abs(getCurrentVelocityY());
+        int offset = (int)Math.abs(getCurrentVelocityY() + getAccelerationY());
         if(offset < minOffset) { offset = minOffset; }
         if(offset > maxOffset) { offset = maxOffset; }
 
-        int offsetVel = (int)Math.abs(getCurrentVelocityX());
+        int offsetVel = (int)Math.abs(getCurrentVelocityX() + getAccelerationX());
 
         int x = (int)getPositionX() - offsetVel;
         int y = (int)getPositionY() + offset;
@@ -55,14 +55,14 @@ public class Player extends MovingEntity {
     }
 
     public Rectangle getHitboxY() {
-        int minOffset = (int)ACCELERATE_SPEED;
+        int minOffset = (int)ACCELERATE_SPEED + 2;
         int maxOffset = (int)getSize().getWidth() - 2;
 
-        int offset = (int)Math.abs(getCurrentVelocityX());
+        int offset = (int)Math.abs(getCurrentVelocityX() + getAccelerationX());
         if(offset < minOffset) { offset = minOffset; }
         if(offset > maxOffset) { offset = maxOffset; }
 
-        int offsetVel = (int)Math.abs(getCurrentVelocityY());
+        int offsetVel = (int)Math.abs(getCurrentVelocityY() + getAccelerationY());
 
         int x = (int)getPositionX() + offset;
         int y = (int)getPositionY() - offsetVel;
@@ -107,21 +107,30 @@ public class Player extends MovingEntity {
 
     public void updateMovement(Rectangle boundaries, ArrayList<Tile> tiles) {
         super.updateMovement();
+
         double newPositionX = getPositionX();
         double newPositionY = getPositionY();
 
         // X - Boundaries
         if(this.getPositionX() < boundaries.getX()) {
             newPositionX = boundaries.getX();
+            setCurrentVelocityX(0);
+            setAccelerationX(0);
         } else if(this.getPositionX()+this.getSize().getWidth() > boundaries.getX() + boundaries.getWidth()) {
             newPositionX = boundaries.getX() + boundaries.getWidth() - this.getSize().getWidth();
+            setCurrentVelocityX(0);
+            setAccelerationX(0);
         }
 
         // Y - Boundaries
         if(this.getPositionY() < boundaries.getY()) {
             newPositionY = boundaries.getY();
+            setCurrentVelocityY(0);
+            setAccelerationY(0);
         } else if(this.getPositionY()+this.getSize().getHeight() > boundaries.getY() + boundaries.getHeight()) {
             newPositionY = boundaries.getY() + boundaries.getHeight() - this.getSize().getHeight();
+            setCurrentVelocityY(0);
+            setAccelerationY(0);
         }
 
         // Collision check
@@ -142,6 +151,7 @@ public class Player extends MovingEntity {
                         }
 
                         setCurrentVelocityX(0);
+                        setAccelerationX(0);
                     }
                 }
             }
@@ -162,6 +172,7 @@ public class Player extends MovingEntity {
                         }
 
                         setCurrentVelocityY(0);
+                        setAccelerationY(0);
                     }
                 }
             }
@@ -169,5 +180,14 @@ public class Player extends MovingEntity {
 
         setPositionX(newPositionX);
         setPositionY(newPositionY);
+
+        game.setDevData("Pos X", (int)getPositionX());
+        game.setDevData("Pos Y", (int)getPositionY());
+
+        game.setDevData("Vel X", (int)getCurrentVelocityX());
+        game.setDevData("Vel Y", (int)getCurrentVelocityY());
+
+        game.setDevData("Acc X", (int)getAccelerationX());
+        game.setDevData("Acc Y", (int)getAccelerationY());
     }
 }
