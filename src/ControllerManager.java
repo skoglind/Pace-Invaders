@@ -28,6 +28,10 @@ public class ControllerManager {
         }
     }
 
+    public Controller getActiveController() {
+        return activeController;
+    }
+
     public boolean setActiveController(String identifier) {
         if(controllers.containsKey(identifier)) {
             if(this.activeController != null) { this.activeController.dispose(); }

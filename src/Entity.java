@@ -10,6 +10,8 @@ import java.util.HashMap;
 public class Entity {
     protected Game game;
 
+    protected static final double DRAWOFFSET = 50;
+
     private Vector2D position;
     private Dimension size;
 
@@ -31,6 +33,11 @@ public class Entity {
     public Vector2D getPosition() { return position; }
     public double getPositionX() { return position.getX(); }
     public double getPositionY() { return position.getY(); }
+
+    public double getX1() { return getPositionX(); }
+    public double getY1() { return getPositionY(); }
+    public double getX2() { return getPositionX() + getSize().getWidth(); }
+    public double getY2() { return getPositionY() + getSize().getHeight(); }
 
     public Dimension getSize() { return size; }
     public Dimension getRealSize() { return new Dimension((int)size.getWidth()+1, (int)size.getHeight()+1); }
@@ -73,14 +80,30 @@ public class Entity {
     }
 
     public void Draw(Graphics2D canvas) {
-        if(spriteSets.containsKey(activeSpriteSet)) {
-            canvas.drawImage(spriteSets.get(activeSpriteSet).getSprite(), (int)getPositionX(), (int)getPositionY(), game.getGraphicsHandler());
-        }
+        if(isVisibleOnScreenOffset()) {
+            if (spriteSets.containsKey(activeSpriteSet)) {
+                canvas.drawImage(spriteSets.get(activeSpriteSet).getSprite(), (int) getPositionX(), (int) getPositionY(), game.getGraphicsHandler());
+            }
 
-        if(game.showHitbox) {
-            canvas.setColor(hitboxColor);
-            canvas.drawRect((int)getPositionX(), (int)getPositionY(), (int)getSize().getWidth(), (int)getSize().getHeight());
+            if (game.showHitbox) {
+                canvas.setColor(hitboxColor);
+                canvas.drawRect((int) getPositionX(), (int) getPositionY(), (int) getSize().getWidth(), (int) getSize().getHeight());
+            }
         }
+    }
+
+    public boolean isVisibleOnScreenOffset() {
+        boolean drawEntity = true;
+        if(getX2() < -DRAWOFFSET || getX1() > game.SCREEN_WIDTH + DRAWOFFSET) { drawEntity = false; }
+        if(getY2() < -DRAWOFFSET || getY1() > game.SCREEN_HEIGHT + DRAWOFFSET) { drawEntity = false; }
+        return drawEntity;
+    }
+
+    public boolean isVisibleOnScreen() {
+        boolean drawEntity = true;
+        if(getX2() < 0 || getX1() > game.SCREEN_WIDTH) { drawEntity = false; }
+        if(getY2() < 0 || getY1() > game.SCREEN_HEIGHT) { drawEntity = false; }
+        return drawEntity;
     }
 
     private void updateSpriteSet() {

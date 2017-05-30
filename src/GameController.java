@@ -1,7 +1,4 @@
-import javafx.scene.media.AudioClip;
-
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +8,6 @@ import java.util.ArrayList;
 public class GameController extends Controller {
     // ENTITIES
     private Player player;
-    private ArrayList<Level> levels;
 
     // STATUS
     private Level activeLevel;
@@ -23,21 +19,16 @@ public class GameController extends Controller {
 
     public void dispose() {
         activeLevel.dispose();
-        levels = null;
         player = null;
     }
 
     public void init() {
-        levels = new ArrayList<>();
-
         player = new Player(game);
-        player.setPosition(new Vector2D(game.SCREEN_WIDTH/2 - player.getSize().getWidth()/2, game.SCREEN_HEIGHT - player.getSize().getHeight()));
+        player.setPosition(new Vector2D(game.SCREEN_WIDTH/2 - player.getSize().getWidth()/2,
+                game.SCREEN_HEIGHT - player.getSize().getHeight()));
+
         levelID = 0;
-
-        Level level1 = new Level(this, "level1.lvl");
-        levels.add(level1);
-
-        activeLevel = levels.get(levelID);
+        activeLevel = game.getLevel(levelID);
         activeLevel.init();
     }
 

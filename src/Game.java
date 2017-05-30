@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -17,6 +18,7 @@ public class Game {
     public static final String SFX_FOLDER = "media/sfx/";
     public static final String MUSIC_FOLDER = "media/music/";
     public static final String SPRITESHEETS_FOLDER = "media/spritesheet/";
+    public static final String LEVEL_FOLDER = "data/level/";
     public static final boolean showHitbox = true;
 
     // HANDLERS
@@ -32,6 +34,7 @@ public class Game {
     private HashMap<String, String> availableSFX;
     private HashMap<String, String> availableMusic;
     private HashMap<String, SpriteSheet> spriteSheets;
+    private ArrayList<Level> levels;
     private int currentFPS = 0;
     private int lastFrameTime = 0;
     private HashMap<String, Integer> devData;
@@ -54,12 +57,14 @@ public class Game {
             return spriteSheets.get(name);
         } else { return null; }
     }
+    public Level getLevel(int index) { return levels.get(index); }
+    public Controller getActiveController() { return controllerManager.getActiveController(); }
 
     // SETTERS
     public void setController(String identifier) {
         controllerManager.setActiveController(identifier);
     }
-    public void loadData() { loadSpriteSheets(); loadMusic(); loadSFX(); loadFonts(); }
+    public void loadData() { loadSpriteSheets(); loadMusic(); loadSFX(); loadFonts(); loadLevels(); }
     public void setDevData(String title, int data) { devData.put(title, data); }
 
     /**
@@ -127,13 +132,12 @@ public class Game {
      * Load SpriteSheet
      */
     public void loadSpriteSheets() {
-        String spriteSheetFolder = "media/spritesheet/";
         spriteSheets = new HashMap<>();
 
-        spriteSheets.put("player_green", new SpriteSheet(spriteSheetFolder + "green_anim.png"));
-        spriteSheets.put("player_red", new SpriteSheet(spriteSheetFolder + "red_anim.png"));
-        spriteSheets.put("player_violet", new SpriteSheet(spriteSheetFolder + "violet_anim.png"));
-        spriteSheets.put("player_white", new SpriteSheet(spriteSheetFolder + "white_anim.png"));
+        spriteSheets.put("player_green", new SpriteSheet(SPRITESHEETS_FOLDER + "green_anim.png"));
+        spriteSheets.put("player_red", new SpriteSheet(SPRITESHEETS_FOLDER + "red_anim.png"));
+        spriteSheets.put("player_violet", new SpriteSheet(SPRITESHEETS_FOLDER + "violet_anim.png"));
+        spriteSheets.put("player_white", new SpriteSheet(SPRITESHEETS_FOLDER + "white_anim.png"));
     }
 
     /**
@@ -143,6 +147,20 @@ public class Game {
 
     }
 
+    /**
+     * Load Levels
+     */
+    public void loadLevels() {
+        levels = new ArrayList<>();
+
+        HashMap<String, String> levelFiles = getFilesInFolder(LEVEL_FOLDER, "lvl");
+        if(levelFiles != null) {
+            for (HashMap.Entry<String, String> entry : levelFiles.entrySet()) {
+                Level level = new Level(this, entry.getValue());
+                levels.add(level);
+            }
+        }
+    }
 
     /**
      * Run game
