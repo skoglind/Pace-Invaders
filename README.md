@@ -1,6 +1,8 @@
 # Pace-Invaders
 Space Invaders Clone
 
+##### Partly done!
+
 ## Credits
 * Music
   * Amsterdam by LASERS
